@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Usage &#8212; dractor 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="dractor 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Recipes" href="recipe.html" />
+    <link rel="prev" title="Background" href="background.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="repls-and-bpython">
+<h2>REPLs and bpython<a class="headerlink" href="#repls-and-bpython" title="Permalink to this headline">¶</a></h2>
+<p>dractor lends itself well to interactive use via a Python REPL.  We recommend
+<a class="reference external" href="https://bpython-interpreter.org/">bpython</a> because it features autocompletion,
+introspection, and docstrings.</p>
+</div>
+<div class="section" id="setting-up-an-environment">
+<h2>Setting up an environment<a class="headerlink" href="#setting-up-an-environment" title="Permalink to this headline">¶</a></h2>
+<p>Dractor is written for use with Python 3.5.  If you are on a system where this
+is not the default python, you can create a virtualenv (provided by python-virtualenv
+in Ubuntu/Debian).</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>user@host:~$ virtualenv --python /usr/bin/python3.5 venvs/dractor_shed
+Running virtualenv with interpreter /usr/bin/python3.5
+Using base prefix &#39;/usr&#39;
+New python executable in /home/jjh/venvs/dractor_shed/bin/python3.5
+Also creating executable in /home/jjh/venvs/dractor_shed/bin/python
+Installing setuptools, pkg_resources, pip, wheel...done.
+</pre></div>
+</div>
+<p>Once the virutalenv has been created, activate it.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>user@host:~$ source venvs/dractor_shed/bin/activate
+(dractor_shed) user@host:~$
+</pre></div>
+</div>
+<p>Make sure <code class="docutils literal"><span class="pre">tox</span></code> is installed:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>(dractor_shed) user@host:~/Software/dractor$ pip install tox
+...
+</pre></div>
+</div>
+<p>Now you can create the dractor wheel by building and installing it.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>(dractor_shed) user@host:~/Software/dractor$ make
+tox -- pylint
+&lt; lots of output &gt;
+_______________________________________________ summary ________________________________________________
+py35: commands succeeded
+congratulations :)
+</pre></div>
+</div>
+<p>Install the dractor wheel into your virtualenv:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>(dractor_shed) user@host:~/Software/dractor$ pip install dist/dractor-0.0.1-py3-none-any.whl
+Processing ./dist/dractor-0.0.1-py3-none-any.whl
+Requirement already satisfied: requests&gt;=2.11.1 in /home/jjh/venvs/dractor_shed/lib/python3.5/site-packages (from dractor==0.0.1)
+Collecting jsonschema&gt;=2.5.1 (from dractor==0.0.1)
+  Using cached jsonschema-2.5.1-py2.py3-none-any.whl
+Collecting click&gt;=6.6 (from dractor==0.0.1)
+  Downloading click-6.7-py2.py3-none-any.whl (71kB)
+    100% |████████████████████████████████| 71kB 2.7MB/s
+Collecting lxml&gt;=3.6.4 (from dractor==0.0.1)
+  Downloading lxml-3.7.2-cp35-cp35m-manylinux1_x86_64.whl (7.2MB)
+    100% |████████████████████████████████| 7.2MB 177kB/s
+Installing collected packages: jsonschema, click, lxml, dractor
+Successfully installed click-6.7 dractor-0.0.1 jsonschema-2.5.1 lxml-3.7.2
+</pre></div>
+</div>
+<p>Also install bpython.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>(dractor_shed) user@host:~/Software/dractor$ pip install bpython
+Collecting bpython
+  Using cached bpython-0.16-py2.py3-none-any.whl
+&lt; lots of output &gt;
+Installing collected packages: bpython
+Successfully installed bpython-0.16
+</pre></div>
+</div>
+</div>
+<div class="section" id="basic-connection">
+<h2>Basic connection<a class="headerlink" href="#basic-connection" title="Permalink to this headline">¶</a></h2>
+<p>Connecting to a DRAC is fairly straight forward with dractor.  Launch
+bpython and connect to the DRAC by creating a new Client object.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">dractor.dcim</span> <span class="k">import</span> <span class="n">Client</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s1">&#39;192.168.0.120&#39;</span><span class="p">,</span> <span class="mi">443</span><span class="p">,</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="s1">&#39;calvin&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="objects-exposed-by-the-client">
+<h2>Objects exposed by the client<a class="headerlink" href="#objects-exposed-by-the-client" title="Permalink to this headline">¶</a></h2>
+<p>When the client connects to the DRAC, it issues a WS-Man identify call.
+The response to this call contains the version of the Lifecycle
+controller.  Using this version, the client object dynamically
+constructs all supported classes for that version of the Lifecycle
+controller and adds them as attributes to itself.</p>
+<p>There are two main kinds of classes created.  Classes that contain the
+keyword Factory create objects using information from the DRAC via
+WS-Man get or enumerate.  The classes that do not contain factory are
+classes that only contain methods to call via WS-Man invoke.  One special
+thing to note is that there are a few classes out there that are created
+via a factory class but also contain methods.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;&gt;&gt;&gt; print(&quot;\n&quot;.join( [x for x in dir(client) if &#39;DCIM&#39; in x]))</span>
+<span class="go">DCIM_BIOSEnumerationFactory</span>
+<span class="go">DCIM_BIOSIntegerFactory</span>
+<span class="go">DCIM_BIOSPasswordFactory</span>
+<span class="go">DCIM_BIOSService</span>
+<span class="go">DCIM_BIOSStringFactory</span>
+<span class="go">DCIM_BootConfigSettingFactory</span>
+<span class="go">DCIM_BootSourceSettingFactory</span>
+<span class="go">DCIM_CPUViewFactory</span>
+<span class="go">DCIM_CSPowerManagementService</span>
+<span class="go">DCIM_ComputerSystem</span>
+<span class="go">DCIM_ControllerViewFactory</span>
+<span class="go">DCIM_EnclosureViewFactory</span>
+<span class="go">DCIM_JobServiceFactory</span>
+<span class="go">DCIM_LCEnumerationFactory</span>
+<span class="go">DCIM_LCLogEntryFactory</span>
+<span class="go">DCIM_LCRecordLogFactory</span>
+<span class="go">DCIM_LCService</span>
+<span class="go">DCIM_LCStringFactory</span>
+<span class="go">DCIM_LifecycleJobFactory</span>
+<span class="go">DCIM_NICViewFactory</span>
+<span class="go">DCIM_OSDeploymentService</span>
+<span class="go">DCIM_PhysicalComputerSystemViewFactory</span>
+<span class="go">DCIM_PhysicalDiskViewFactory</span>
+<span class="go">DCIM_PowerSupplyViewFactory</span>
+<span class="go">DCIM_RAIDAttributeFactory</span>
+<span class="go">DCIM_RAIDEnumerationFactory</span>
+<span class="go">DCIM_RAIDIntegerFactory</span>
+<span class="go">DCIM_RAIDService</span>
+<span class="go">DCIM_RAIDStringFactory</span>
+<span class="go">DCIM_SELLogEntryFactory</span>
+<span class="go">DCIM_SELRecordLog</span>
+<span class="go">DCIM_SoftwareIdentityFactory</span>
+<span class="go">DCIM_SoftwareInstallationService</span>
+<span class="go">DCIM_SystemEnumerationFactory</span>
+<span class="go">DCIM_SystemManagementService</span>
+<span class="go">DCIM_SystemViewFactory</span>
+<span class="go">DCIM_VirtualDiskViewFactory</span>
+</pre></div>
+</div>
+<p>These classes have docstrings that are auto-generated from information
+contained in the MOF files.  These docstrings are also used to
+automatically generate documentation.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">DCIM_LCService</span><span class="o">.</span><span class="n">CreateConfigJob</span><span class="p">)</span>
+<span class="go">Help on method CreateConfigJob in module dractor.dcim.v2303030.DCIM_LCService:</span>
+
+<span class="go">CreateConfigJob(ScheduledStartTime=None, RebootIfRequired=None) method of dractor.dcim.v2303030.DCIM_LCService.DCIM_LCService instance</span>
+<span class="go"> This method is called to apply the pending values set</span>
+<span class="go"> using the SetAttribute and SetAttributes methods</span>
+
+<span class="go"> Args:</span>
+<span class="go">         ScheduledStartTime (datetime):</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 Not documented</span>
+
+<span class="go">         RebootIfRequired (boolean):</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 Not documented</span>
+
+
+<span class="go"> Returns:</span>
+<span class="go">     dict:</span>
+<span class="go">         A dictionary possibly containing these keys:</span>
+
+<span class="go">         **Job** (*CIM_ConcreteJob*)</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 a reference to the ConcreteJob is returned</span>
+
+<span class="go">         **MessageID** (*string*)</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 Error MessageID is returned if the method fails</span>
+<span class="go">                     to execute.</span>
+
+<span class="go">         **Message** (*string*)</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 Error Message in english corresponding to the</span>
+<span class="go">                     MessageID</span>
+
+<span class="go">         **MessageArguments** (*list of string*)</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 Any dynamic string substitutions for the Message</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="informational-classes">
+<h2>Informational classes<a class="headerlink" href="#informational-classes" title="Permalink to this headline">¶</a></h2>
+<p>The Lifecycle Controller has many classes that provide information
+about the computer system.  For example, the <code class="docutils literal"><span class="pre">DCIM_NICView</span></code> class contains
+many attributes about the NICs present on the system.  At the WS-Man
+level this information is retrieved using Get and Enumerate calls.</p>
+<p>The dractor client object exposes these informational classes via
+factory objects.  These factory objects provide <code class="docutils literal"><span class="pre">get()</span></code> and
+<code class="docutils literal"><span class="pre">enumerate()</span></code> methods that return classes populated with information
+from the Lifecycle controller.</p>
+<p>If the MOF file defines a key attribute for the class, enumerate
+returns a dictionary with the value as the index.  If a key is not
+defined in the MOF file, common keys such as FQDD will be used or a
+unique name will be generated as a last resort.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nic_inventory</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">DCIM_NICViewFactory</span><span class="o">.</span><span class="n">enumerate</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nic_inventory</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="go">dict_keys([&#39;NIC.Slot.1-1-1&#39;, &#39;NIC.Slot.1-2-1&#39;, &#39;NIC.Embedded.1-1-1&#39;, &#39;NIC.Slot.4-1-1&#39;</span>
+<span class="go">, &#39;NIC.Embedded.2-1-1&#39;, &#39;NIC.Slot.4-2-1&#39;])</span>
+</pre></div>
+</div>
+<p>The dictionary returned by <code class="docutils literal"><span class="pre">client.DCIM_NICViewFactory.enumerate()</span></code>
+contains classes of the type <code class="docutils literal"><span class="pre">DCIM_NICView</span></code>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">nic1</span> <span class="o">=</span> <span class="n">nic_inventory</span><span class="p">[</span><span class="s1">&#39;NIC.Slot.1-1-1&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">nic1</span><span class="p">)</span>
+<span class="go">&lt;class &#39;dractor.dcim.v2303030.DCIM_NICView.DCIM_NICView&#39;&gt;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">DCIM_NICView</span></code> object exposes all attributes defined in the
+<code class="docutils literal"><span class="pre">DCIM_NICView</span></code> MOF file.  These attributes are of type
+<code class="docutils literal"><span class="pre">DCIMQualifiedValue</span></code>.  <code class="docutils literal"><span class="pre">DCIMQualifiedvalue</span></code> exists in order to
+support mappings and metadata provided in the MOF file.</p>
+<p>For example, the <code class="docutils literal"><span class="pre">DCIM_NICView</span></code> class provides an attribute called
+<code class="docutils literal"><span class="pre">AutoNegotiation</span></code>.  This attribute is returned as an integer value from
+the Lifecycle controller.  But there is a mapping specified in the MOF
+file that will allow us to translate the integer to a human readable
+value.  We manage this translation through the <code class="docutils literal"><span class="pre">DCIMQualifiedvalue</span></code>
+class so that the end user or program can use either the mapped value
+or unmapped value.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">type</span><span class="p">(</span><span class="n">nic1</span><span class="o">.</span><span class="n">AutoNegotiation</span><span class="p">)</span>
+<span class="go">&lt;class &#39;dractor.types.qualified.DCIMQualifiedValue&#39;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nic1</span><span class="o">.</span><span class="n">AutoNegotiation</span><span class="o">.</span><span class="n">description</span>
+<span class="go">&#39;Auto Negotiated.&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nic1</span><span class="o">.</span><span class="n">AutoNegotiation</span><span class="o">.</span><span class="n">valuemap</span>
+<span class="go">{&#39;0&#39;: &#39;Unknown&#39;, &#39;2&#39;: &#39;Enabled&#39;, &#39;3&#39;: &#39;Disabled&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nic1</span><span class="o">.</span><span class="n">AutoNegotiation</span><span class="o">.</span><span class="n">value</span>
+<span class="go">&#39;Disabled&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">nic1</span><span class="o">.</span><span class="n">AutoNegotiation</span><span class="o">.</span><span class="n">unmapped_value</span>
+<span class="go">&#39;3&#39;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">DCIMQualifiedvalue</span></code> objects will show the human readable mapping when
+cast to a string.  The <code class="docutils literal"><span class="pre">repr</span></code> will show the current value mapping.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">str</span><span class="p">(</span><span class="n">nic1</span><span class="o">.</span><span class="n">AutoNegotiation</span><span class="p">)</span>
+<span class="go">&#39;Disabled&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">repr</span><span class="p">(</span><span class="n">nic1</span><span class="o">.</span><span class="n">AutoNegotiation</span><span class="p">)</span>
+<span class="go">&#39;&lt;DCIMQualifiedValue 3 -&gt; Disabled&gt;&#39;</span>
+</pre></div>
+</div>
+<p>Classes generated by factories also contain a special &#8216;dictionary&#8217;
+attribute.  This contains an unmapped dictionary of all values
+returned by the DRAC.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="p">(</span><span class="n">nic1</span><span class="o">.</span><span class="n">dictionary</span><span class="p">)</span>
+<span class="go">{&#39;AutoNegotiation&#39;: &#39;3&#39;,</span>
+<span class="go">&#39;BusNumber&#39;: &#39;10&#39;,</span>
+<span class="go">&#39;ControllerBIOSVersion&#39;: None,</span>
+<span class="go">&#39;CurrentMACAddress&#39;: &#39;A0:36:9F:CD:41:14&#39;,</span>
+<span class="go">&#39;DataBusWidth&#39;: &#39;000B&#39;,</span>
+<span class="go">&#39;DeviceDescription&#39;: &#39;NIC in Slot 1 Port 1 Partition 1&#39;,</span>
+<span class="go">&#39;DeviceNumber&#39;: &#39;0&#39;,</span>
+<span class="go">&#39;EFIVersion&#39;: &#39;5.3.14&#39;,</span>
+<span class="go">&#39;FCoEOffloadMode&#39;: &#39;3&#39;,</span>
+<span class="go">&#39;FCoEWWNN&#39;: &#39;a0:36:9f:cd:41:15&#39;,</span>
+<span class="go">&#39;FQDD&#39;: &#39;NIC.Slot.1-1-1&#39;,</span>
+<span class="go">&#39;FamilyVersion&#39;: &#39;17.5.10&#39;,</span>
+<span class="go">&#39;FunctionNumber&#39;: &#39;0&#39;,</span>
+<span class="go">&#39;InstanceID&#39;: &#39;NIC.Slot.1-1-1&#39;,</span>
+<span class="go">&#39;LastSystemInventoryTime&#39;: &#39;20161206003601.000000+000&#39;,</span>
+<span class="go">&#39;LastUpdateTime&#39;: &#39;20161001005420.000000+000&#39;,</span>
+<span class="go">&#39;LinkDuplex&#39;: &#39;0&#39;,</span>
+<span class="go">&#39;LinkSpeed&#39;: &#39;0&#39;,</span>
+<span class="go">&#39;MaxBandwidth&#39;: &#39;0&#39;,</span>
+<span class="go">&#39;MediaType&#39;: &#39;SFP_PLUS&#39;,</span>
+<span class="go">&#39;MinBandwidth&#39;: &#39;0&#39;,</span>
+<span class="go">&#39;NicMode&#39;: &#39;3&#39;,</span>
+<span class="go">&#39;PCIDeviceID&#39;: &#39;154d&#39;,</span>
+<span class="go">&#39;PCISubDeviceID&#39;: &#39;7b11&#39;,</span>
+<span class="go">&#39;PCISubVendorID&#39;: &#39;8086&#39;,</span>
+<span class="go">&#39;PCIVendorID&#39;: &#39;8086&#39;,</span>
+<span class="go">&#39;PermanentFCOEMACAddress&#39;: None,</span>
+<span class="go">&#39;PermanentMACAddress&#39;: &#39;A0:36:9F:CD:41:14&#39;,</span>
+<span class="go">&#39;PermanentiSCSIMACAddress&#39;: None,</span>
+<span class="go">&#39;ProductName&#39;: &#39;Intel(R) Ethernet 10G 2P X520 Adapter - A0:36:9F:CD:41:14&#39;,</span>
+<span class="go">&#39;Protocol&#39;: &#39;NIC&#39;,</span>
+<span class="go">&#39;ReceiveFlowControl&#39;: &#39;3&#39;,</span>
+<span class="go">&#39;SlotLength&#39;: &#39;0004&#39;,</span>
+<span class="go">&#39;SlotType&#39;: &#39;00AB&#39;,</span>
+<span class="go">&#39;TransmitFlowControl&#39;: &#39;3&#39;,</span>
+<span class="go">&#39;VendorName&#39;: &#39;Intel Corp&#39;,</span>
+<span class="go">&#39;VirtWWN&#39;: &#39;20:00:A0:36:9F:CD:41:15&#39;,</span>
+<span class="go">&#39;VirtWWPN&#39;: &#39;20:01:A0:36:9F:CD:41:15&#39;,</span>
+<span class="go">&#39;WWN&#39;: None,</span>
+<span class="go">&#39;WWPN&#39;: &#39;20:00:A0:36:9F:CD:41:15&#39;,</span>
+<span class="go">&#39;iScsiOffloadMode&#39;: &#39;3&#39;}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="invoking-methods">
+<h2>Invoking methods<a class="headerlink" href="#invoking-methods" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s do a simple example of blinking the chassis UID LED.  The method
+to do this is a member of the <code class="docutils literal"><span class="pre">DCIM_SystemManagementService</span></code> class
+called <code class="docutils literal"><span class="pre">IdentifyChassis</span></code>.  We can use <code class="docutils literal"><span class="pre">help()</span></code> to get the
+documentation for this method from the REPL:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">help</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">DCIM_SystemManagementService</span><span class="o">.</span><span class="n">IdentifyChassis</span><span class="p">)</span>
+<span class="go">Help on method IdentifyChassis in module dractor.dcim.v2303030.DCIM_SystemManagementService:</span>
+
+<span class="go">IdentifyChassis(IdentifyState, DurationLimit=None) method of dractor.dcim.v2303030.DCIM_SystemManagementService.DCIM_SystemManagementService instance</span>
+<span class="go"> This method is used to turn on and off LEDs on the chassis in</span>
+<span class="go"> order to identify it.</span>
+
+<span class="go"> Args:</span>
+<span class="go">         IdentifyState (int, optional):</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 This parameter represents the requested state of the identifying LED.</span>
+
+<span class="go">             Value Mappings::</span>
+
+<span class="go">                                                 &#39;0&#39; &lt;-&gt; &#39;Disabled&#39;</span>
+<span class="go">                                                 &#39;1&#39; &lt;-&gt; &#39;Enabled&#39;</span>
+<span class="go">                                                 &#39;2&#39; &lt;-&gt; &#39;Time Limited Enabled&#39;</span>
+
+<span class="go">         DurationLimit (int):</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 This parameter represents the requested time limit in seconds for identifying</span>
+<span class="go">                 chassis before the identifying LED turns back off.</span>
+<span class="go">                 The parameter shall be specified and non-NULL, if the IdentifyState parameter has</span>
+<span class="go">                 value 2 - Time Limited Enabled.</span>
+
+
+<span class="go"> Returns:</span>
+<span class="go">     dict:</span>
+<span class="go">         A dictionary possibly containing these keys:</span>
+
+<span class="go">         **MessageID** (*string*)</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 Error MessageID is returned if the method fails</span>
+<span class="go">                     to execute.</span>
+
+<span class="go">         **Message** (*string*)</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 Error Message in english corresponding to the</span>
+<span class="go">                     MessageID</span>
+
+<span class="go">         **MessageArguments** (*list of string*)</span>
+<span class="go">             From the Dell MOF description::</span>
+
+<span class="go">                 Any dynamic string substitutions for the Message</span>
+</pre></div>
+</div>
+<p>So it looks to be pretty clear how to blink the LED using our client.
+Since <code class="docutils literal"><span class="pre">IdentifyState</span></code> is a mapped value, we can supply either &#8216;1&#8217; or
+&#8216;Enable&#8217; to turn on the LED:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">DCIM_SystemManagementService</span><span class="o">.</span><span class="n">IdentifyChassis</span><span class="p">(</span><span class="n">IdentifyState</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="go">{&#39;Message&#39;: &lt;DCIMQualifiedValue The command was successful -&gt; The command was successful&gt;, &#39;MessageID&#39;: &lt;DCIMQualifiedValue SYS001 -&gt; SYS001&gt;, &#39;ReturnValue&#39;: &lt;DCIMQualifiedValue 0 -&gt; Completed with No Error&gt;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">client</span><span class="o">.</span><span class="n">DCIM_SystemManagementService</span><span class="o">.</span><span class="n">IdentifyChassis</span><span class="p">(</span><span class="n">IdentifyState</span><span class="o">=</span><span class="s1">&#39;Disabled&#39;</span><span class="p">)</span>
+<span class="go">{&#39;Message&#39;: &lt;DCIMQualifiedValue The command was successful -&gt; The command was successful&gt;, &#39;MessageID&#39;: &lt;DCIMQualifiedValue SYS001 -&gt; SYS001&gt;, &#39;ReturnValue&#39;: &lt;DCIMQualifiedValue 0 -&gt; Completed with No Error&gt;}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="further-reading">
+<h2>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this headline">¶</a></h2>
+<p>From here it would be worthwhile taking a look at the recipe examples
+included with dractor to see more complicated usage.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Usage</a><ul>
+<li><a class="reference internal" href="#repls-and-bpython">REPLs and bpython</a></li>
+<li><a class="reference internal" href="#setting-up-an-environment">Setting up an environment</a></li>
+<li><a class="reference internal" href="#basic-connection">Basic connection</a></li>
+<li><a class="reference internal" href="#objects-exposed-by-the-client">Objects exposed by the client</a></li>
+<li><a class="reference internal" href="#informational-classes">Informational classes</a></li>
+<li><a class="reference internal" href="#invoking-methods">Invoking methods</a></li>
+<li><a class="reference internal" href="#further-reading">Further Reading</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="background.html" title="previous chapter">Background</a></li>
+      <li>Next: <a href="recipe.html" title="next chapter">Recipes</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/usage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, anonymous.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5a1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/usage.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

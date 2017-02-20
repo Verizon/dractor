@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Recipes &#8212; dractor 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="dractor 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Architecture" href="architecture.html" />
+    <link rel="prev" title="Usage" href="usage.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="recipes">
+<h1>Recipes<a class="headerlink" href="#recipes" title="Permalink to this headline">¶</a></h1>
+<p>Dractor includes a number of &#8216;recipes&#8217;.  A recipe is essentially a
+workflow utilizing dractor.  Included are recipes to check the server
+health, configure BIOS settings, configure RAID, etc.  These recipes
+are intended to serve as examples of how to perform complicated
+workflows with dractor.  The recipes are build upon a base class
+that provides high level methods for common tasks such as queueing and
+polling Lifecycle jobs or checking that the Lifecycle Controller is
+ready to accept commands.</p>
+<div class="section" id="recipe-concepts">
+<h2>Recipe Concepts<a class="headerlink" href="#recipe-concepts" title="Permalink to this headline">¶</a></h2>
+<p>The BIOS and RAID recipes are the more complicated examples.  There
+are two main ideas behind how they are structured.  One idea is that
+we want to keep the mechanics of the configuration separate from the
+specification of the desired end state.  The other idea is that we
+should leverage the information from the LC to make smart
+configuration choices.</p>
+<div class="section" id="declarative-configuration-files">
+<h3>Declarative Configuration Files<a class="headerlink" href="#declarative-configuration-files" title="Permalink to this headline">¶</a></h3>
+<p>For the included BIOS and RAID recipes, configurations are stored as
+JSON.  Example configuration files are located in
+<code class="docutils literal"><span class="pre">dractor/examples/configuration</span></code>.  Included are examples for both the
+RAID and BIOS recipes.  By keeping the desired configurations in a
+static format like JSON we can apply schema validation to them to make
+sure they are well formed.  We can also modify the recipes that
+consume them with enhancements and fixes without having to change the
+configurations themselves.</p>
+</div>
+<div class="section" id="leveraging-introspection-with-selectors">
+<h3>Leveraging Introspection with Selectors<a class="headerlink" href="#leveraging-introspection-with-selectors" title="Permalink to this headline">¶</a></h3>
+<p>The Lifecycle Controller provides a wealth of information about the
+system being configured.  Selectors allow for the creation and
+automatic selection of configurations based on the hardware of the
+machine being configured.  For example, assume there is a population
+of servers with three drives where the last two drives are always a
+matched pair of SSDs but the first drive may be mechanical or another
+matched SSD.  It is possible to create two different configurations
+for a two SSD RAID-1 volume.  One configuration will match servers
+where the first drive is mechanical and use drives 2 and 3 to form the
+array.  The other configuration will match servers where the first
+drive is solid state and use drives 1 and 2 to create the RAID-1
+volume.  We use &#8216;Selectors&#8217; to perform this sort of matching.</p>
+<p>In the RAID example configuration file there are multiple entries.
+Each entry has a <code class="docutils literal"><span class="pre">Settings</span></code> section and a <code class="docutils literal"><span class="pre">Selectors</span></code> section.
+The <code class="docutils literal"><span class="pre">Selectors</span></code> are used to select an appropriate configuration.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;Selectors&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;HardwareAttributes&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;Disk.Bay.0&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;Model&quot;</span><span class="p">:</span> <span class="s2">&quot;INTEL SSDSC2BB12&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Disk.Bay.1&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;Model&quot;</span><span class="p">:</span> <span class="s2">&quot;INTEL SSDSC2BB12&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">HardwareAttributes</span></code> are matched against the Disk, Enclosure,
+and RAID controller enumerations from the Lifecycle Controller.  This
+selector will match a server that has Intel SSDs in Bay 0 and Bay 1.
+Configurations are selected on a most specific match wins basis.  If
+there are multiple specific matches an error is generated.</p>
+</div>
+<div class="section" id="high-level-interactions-with-the-lc">
+<h3>High level interactions with the LC<a class="headerlink" href="#high-level-interactions-with-the-lc" title="Permalink to this headline">¶</a></h3>
+<p>Recipes are all built upon the <code class="docutils literal"><span class="pre">Recipe</span></code> base class located in the
+module <code class="docutils literal"><span class="pre">dractor.recipe.base</span></code>.  This class provides methods to ease
+common tasks that are above the LC API.  Here are some of the included
+methods:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">poll_lc_ready</span></code>: This polls the Lifecycle Controller to make sure that it is ready to accept commands.</li>
+<li><code class="docutils literal"><span class="pre">normalize_job_queue</span></code>: This clears the Lifecycle Controller job queue.</li>
+<li><code class="docutils literal"><span class="pre">queue_jobs_and_reboot</span></code>: This method takes an array of JobIDs and queues them for execution along with a reboot job.</li>
+<li><code class="docutils literal"><span class="pre">service_tag</span></code> and <code class="docutils literal"><span class="pre">system_id</span></code>: These properties make it easy to leverage basic information about the system in order to make configuration decisions.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="running-recipes">
+<h2>Running Recipes<a class="headerlink" href="#running-recipes" title="Permalink to this headline">¶</a></h2>
+<p>A simple command line utility to run the recipes in included with dractor.
+The utility is installed as the command <code class="docutils literal"><span class="pre">dractor</span></code>.  The entry point for the
+utility is <code class="docutils literal"><span class="pre">dractor.util.cli:main</span></code>.  Activate the virtual environment that
+has dractor installed to try the <code class="docutils literal"><span class="pre">dractor</span></code> utility.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>user@host:~$ source venvs/dractor_shed/bin/activate
+(dractor_shed) user@host:~$ dractor
+Usage: dractor [OPTIONS] HOSTNAME COMMAND [ARGS]...
+
+  Main entry point for application
+
+Options:
+  --username TEXT  Username for DRAC
+  --password TEXT  Password for DRAC
+  --port INTEGER   HTTPS port for DRAC
+  --quiet          Set console logging to WARNING or higher
+  --verbose        Set console logging to DEBUG
+  --help           Show this message and exit.
+
+Commands:
+  bios     Run the LC bios recipe
+  chassis  Control Chassis LEDs
+  health   System Health Recipe
+  raid     RAID Recipe
+</pre></div>
+</div>
+</div>
+<div class="section" id="included-recipes">
+<h2>Included Recipes<a class="headerlink" href="#included-recipes" title="Permalink to this headline">¶</a></h2>
+<p>A number of simple and complex recipes have been included to give a range
+of examples on how to use dractor.</p>
+<dl class="docutils">
+<dt><strong>Warning</strong>: The BIOS and RAID recipes will reboot your system.  Only</dt>
+<dd>use in a test environment.</dd>
+</dl>
+<div class="section" id="chassis">
+<h3>Chassis<a class="headerlink" href="#chassis" title="Permalink to this headline">¶</a></h3>
+<p>This is a very simple recipe that contains methods to control server
+power and the UID LED.</p>
+</div>
+<div class="section" id="health">
+<h3>Health<a class="headerlink" href="#health" title="Permalink to this headline">¶</a></h3>
+<p>This is a little more complicated recipe.  It checks the overall server
+health and reports the areas where problems exist.</p>
+</div>
+<div class="section" id="bios">
+<h3>BIOS<a class="headerlink" href="#bios" title="Permalink to this headline">¶</a></h3>
+<p>The LC allows the changing of BIOS settings.  This recipe only changes
+settings that need changing.  An example configuration for the recipe
+is present in <code class="docutils literal"><span class="pre">dractor/examples/configuration</span></code>.  Configurations are
+matched against the Dell SystemID.</p>
+<p>Configurations are applied in order of priority.  This allows settings
+that are dependent on each other, such as performance settings, to be
+applied in a general order.  General order means each dictionary of
+settings is added by priority to an ordered dictionary.  This means
+that all lower priority operations will be completed before higher
+priority ones.  Also, higher priority settings can override base
+settings.</p>
+<p>Example configuratoins may be generated using <code class="docutils literal"><span class="pre">dractor</span> <span class="pre">&lt;drac&gt;</span> <span class="pre">bios</span>
+<span class="pre">inventory</span></code>.  The inventory command will present a configuration based
+on the current settings for the system:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>(dractor_shed) user@host:~$ dractor 192.168.0.120 bios inventory
+INFO:dractor.recipe.base:Making sure the LC is ready for commands
+INFO:dractor.recipe.base:Status is &#39;Ready&#39;: LC061: Lifecycle Controller Remote Services is ready.
+INFO:dractor.recipe.base:Server Status is &#39;Powered Off&#39;.
+INFO:dractor.recipe.base:LCStatus is &#39;Ready&#39;.
+INFO:dractor.recipe.base:Enumerating BIOS settings...
+{
+    &quot;Example Configuration&quot;: {
+        &quot;Description&quot;: &quot;Automatically from a PowerEdge T430 (9X92SD2)&quot;,
+        &quot;Selectors&quot;: {
+            &quot;Priority&quot;: 20,
+            &quot;SystemIDs&quot;: [
+                &quot;1595&quot;
+            ]
+        },
+        &quot;Settings&quot;: {
+            &quot;AcPwrRcvry&quot;: &quot;Last&quot;,
+            &quot;AcPwrRcvryDelay&quot;: &quot;Immediate&quot;,
+            &quot;BootMode&quot;: &quot;Bios&quot;,
+            &quot;BootSeqRetry&quot;: &quot;Enabled&quot;,
+            &quot;CollaborativeCpuPerfCtrl&quot;: &quot;Disabled&quot;,
+            &quot;ConTermType&quot;: &quot;Vt100Vt220&quot;,
+            &quot;CorrEccSmi&quot;: &quot;Enabled&quot;,
+            &quot;DcuIpPrefetcher&quot;: &quot;Enabled&quot;,
+            &quot;DcuStreamerPrefetcher&quot;: &quot;Enabled&quot;,
+            &quot;DynamicCoreAllocation&quot;: &quot;Disabled&quot;,
+            &quot;EmbNic1Nic2&quot;: &quot;Enabled&quot;,
+            &quot;EmbSata&quot;: &quot;AhciMode&quot;,
+            &quot;EmbVideo&quot;: &quot;Enabled&quot;,
+            &quot;EnergyEfficientTurbo&quot;: &quot;Disabled&quot;,
+            &quot;EnergyPerformanceBias&quot;: &quot;MaxPower&quot;,
+            &quot;ErrPrompt&quot;: &quot;Enabled&quot;,
+            &quot;ExtSerialConnector&quot;: &quot;Serial1&quot;,
+            &quot;FailSafeBaud&quot;: &quot;115200&quot;,
+            &quot;ForceInt10&quot;: &quot;Disabled&quot;,
+            &quot;GlobalSlotDriverDisable&quot;: &quot;Disabled&quot;,
+            &quot;HddFailover&quot;: &quot;Disabled&quot;,
+            ...
+            &quot;UncoreFrequency&quot;: &quot;MaxUFS&quot;,
+            &quot;Usb3Setting&quot;: &quot;Disabled&quot;,
+            &quot;UsbPorts&quot;: &quot;AllOn&quot;,
+            &quot;WorkloadProfile&quot;: &quot;NotAvailable&quot;,
+            &quot;WriteCache&quot;: &quot;Disabled&quot;,
+            &quot;WriteDataCrc&quot;: &quot;Disabled&quot;
+        }
+    }
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="raid-recipe">
+<h3>RAID Recipe<a class="headerlink" href="#raid-recipe" title="Permalink to this headline">¶</a></h3>
+<p>The RAID recipe allows the creation of virtual disks, allocation of
+global spares, and setting drives to JBOD mode.  It is a destructive
+operation and clears any existing configurations/virtual drives (even
+if they are not explicitly mentioned in the configuration file).</p>
+<p>If a host only has drives attached a single RAID controller and
+Enclosure, we can use shorthand for the controller, enclosure, and
+drive FQDDs.  The RAID recipe is designed to support multiple
+enclosures and controllers, but right now we enforce this shorthand
+via JSON validation.  The RAID controller FQDD <code class="docutils literal"><span class="pre">RAID.Integrated.1-1</span></code>
+can be referred to as <code class="docutils literal"><span class="pre">Controller</span></code>. The Enclosure FQDD can be
+referred to as <code class="docutils literal"><span class="pre">Enclosure.Internal.0-1:RAID.Integrated.1-1</span></code>. The
+Drive FQDD <code class="docutils literal"><span class="pre">Disk.Bay.9:Enclosure.Internal.0-1:RAID.Integrated.1-1</span></code>
+becomes simply <code class="docutils literal"><span class="pre">Disk.Bay.9</span></code>.  This shorthand makes creating
+configurations much more compact:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;Disk.Virtual.0&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;Mode&quot;</span><span class="p">:</span> <span class="s2">&quot;RAID-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;SpanDepth&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;SpanLength&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">&quot;VirtualDiskName&quot;</span><span class="p">:</span> <span class="s2">&quot;OS&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PhysicalDiskIDs&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;Disk.Bay.0&quot;</span><span class="p">,</span> <span class="s2">&quot;Disk.Bay.1&quot;</span> <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This shorthand also appliect in the <code class="docutils literal"><span class="pre">HardwareAttributes</span></code> selector.
+If we wanted ot match all machines with a single PERC H710 card and a
+26 bay enclosure, we can do:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;HardwareAttributes&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;Controller&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;ProductName&quot;</span><span class="p">:</span> <span class="s2">&quot;PERC H710 Mini&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;Enclosure&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;SlotCount&quot;</span><span class="p">:</span> <span class="mi">26</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To discover more selectors, use <code class="docutils literal"><span class="pre">dractor</span> <span class="pre">&lt;drac&gt;</span> <span class="pre">raid</span> <span class="pre">inventory</span></code>.</p>
+<p>To put a disk into JBOD mode:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;Disk.Bay.0&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;RaidStatus&quot;</span><span class="p">:</span> <span class="s2">&quot;Non-RAID&quot;</span>
+ <span class="p">},</span>
+</pre></div>
+</div>
+<p>To make a disk a global hot spare:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s2">&quot;Disk.Bay.2&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;RaidStatus&quot;</span><span class="p">:</span> <span class="s2">&quot;Spare&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Unallocated drives will be either set to a single drive RAID-1 volume
+or JBOD depending on if the matcing configruation has virtual disks.
+This is done to preserve boot order.  A JBOD drive will probe before
+any virtual disks.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Recipes</a><ul>
+<li><a class="reference internal" href="#recipe-concepts">Recipe Concepts</a><ul>
+<li><a class="reference internal" href="#declarative-configuration-files">Declarative Configuration Files</a></li>
+<li><a class="reference internal" href="#leveraging-introspection-with-selectors">Leveraging Introspection with Selectors</a></li>
+<li><a class="reference internal" href="#high-level-interactions-with-the-lc">High level interactions with the LC</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-recipes">Running Recipes</a></li>
+<li><a class="reference internal" href="#included-recipes">Included Recipes</a><ul>
+<li><a class="reference internal" href="#chassis">Chassis</a></li>
+<li><a class="reference internal" href="#health">Health</a></li>
+<li><a class="reference internal" href="#bios">BIOS</a></li>
+<li><a class="reference internal" href="#raid-recipe">RAID Recipe</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="usage.html" title="previous chapter">Usage</a></li>
+      <li>Next: <a href="architecture.html" title="next chapter">Architecture</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/recipe.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, anonymous.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5a1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/recipe.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

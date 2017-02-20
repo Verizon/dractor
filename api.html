@@ -1,0 +1,336 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Public API &#8212; dractor 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="dractor 0.0.1 documentation" href="index.html" />
+    <link rel="prev" title="Architecture" href="architecture.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="public-api">
+<h1>Public API<a class="headerlink" href="#public-api" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#module-dractor" id="id1">dractor</a></li>
+<li><a class="reference internal" href="#module-dractor.dcim" id="id2">dractor.dcim</a></li>
+<li><a class="reference internal" href="#module-dractor.dcim.base" id="id3">dractor.dcim.base</a></li>
+<li><a class="reference internal" href="#dractor-dcim-v2303030" id="id4">dractor.dcim.v2303030</a></li>
+<li><a class="reference internal" href="#module-dractor.recipe" id="id5">dractor.recipe</a></li>
+<li><a class="reference internal" href="#module-dractor.wsman" id="id6">dractor.wsman</a></li>
+</ul>
+</div>
+<p>Generated from the Python source code.</p>
+<div class="section" id="module-dractor">
+<span id="dractor"></span><h2><a class="toc-backref" href="#id1">dractor</a><a class="headerlink" href="#module-dractor" title="Permalink to this headline">¶</a></h2>
+<p>Root module of the <code class="docutils literal"><span class="pre">dractor</span></code> library.</p>
+</div>
+<div class="section" id="module-dractor.dcim">
+<span id="dractor-dcim"></span><h2><a class="toc-backref" href="#id2">dractor.dcim</a><a class="headerlink" href="#module-dractor.dcim" title="Permalink to this headline">¶</a></h2>
+<p>Fundamental plumbing for DCIM support</p>
+</div>
+<div class="section" id="module-dractor.dcim.base">
+<span id="dractor-dcim-base"></span><h2><a class="toc-backref" href="#id3">dractor.dcim.base</a><a class="headerlink" href="#module-dractor.dcim.base" title="Permalink to this headline">¶</a></h2>
+<p>These are the base classes for the auto-generated DCIM classes</p>
+<dl class="class">
+<dt id="dractor.dcim.base.DCIM">
+<em class="property">class </em><code class="descclassname">dractor.dcim.base.</code><code class="descname">DCIM</code><span class="sig-paren">(</span><em>wsman_client</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.dcim.base.DCIM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for all DCIM objects</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="dractor.dcim.base.DCIMAttributeObject">
+<em class="property">class </em><code class="descclassname">dractor.dcim.base.</code><code class="descname">DCIMAttributeObject</code><span class="sig-paren">(</span><em>wsman_client</em>, <em>attributes</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.dcim.base.DCIMAttributeObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for objects with attributes created by DCIMFactory
+children via get and enumerate</p>
+<dl class="attribute">
+<dt id="dractor.dcim.base.DCIMAttributeObject.dictionary">
+<code class="descname">dictionary</code><a class="headerlink" href="#dractor.dcim.base.DCIMAttributeObject.dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the RAW dictionary returned by WSMAN. This method is useful
+for introspection.  Although we auto-generate attributes with
+doc strings for classes, we may get back more than that from
+the DRAC.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Key/Values returned by DRAC without translation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dractor.dcim.base.DCIMFactory">
+<em class="property">class </em><code class="descclassname">dractor.dcim.base.</code><code class="descname">DCIMFactory</code><span class="sig-paren">(</span><em>wsman_client</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.dcim.base.DCIMFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory base class for DCIM objects that support Get/Enumerate</p>
+<dl class="attribute">
+<dt id="dractor.dcim.base.DCIMFactory.creates">
+<code class="descname">creates</code><a class="headerlink" href="#dractor.dcim.base.DCIMFactory.creates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return what class this factory creates</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dractor.dcim.base.DCIMFactory.enumerate">
+<code class="descname">enumerate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dractor.dcim.base.DCIMFactory.enumerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumerate and return all instances as a dictionary</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dractor.dcim.base.DCIMFactory.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>fqdd</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.dcim.base.DCIMFactory.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an instance of self.creates populated with data returned from the DRAC</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fqdd</strong> (<em>string</em>) &#8211; This is the descriptor used to lookup the object.  Typically this is the InstanceID.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">This returns an populated DCIMAttributeObject child of type self.creates</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">DCIMAttributeError</span></code> &#8211; Some classes don&#8217;t have a key, so the only way to get instances is via enumerate()</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dractor.dcim.base.DCIMFactory.key">
+<code class="descname">key</code><a class="headerlink" href="#dractor.dcim.base.DCIMFactory.key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return what field is being used as our key</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dractor.dcim.base.DCIMMethodObject">
+<em class="property">class </em><code class="descclassname">dractor.dcim.base.</code><code class="descname">DCIMMethodObject</code><span class="sig-paren">(</span><em>wsman_client</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.dcim.base.DCIMMethodObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for objects with properties</p>
+</dd></dl>
+
+</div>
+<div class="section" id="dractor-dcim-v2303030">
+<h2><a class="toc-backref" href="#id4">dractor.dcim.v2303030</a><a class="headerlink" href="#dractor-dcim-v2303030" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dractor.recipe">
+<span id="dractor-recipe"></span><h2><a class="toc-backref" href="#id5">dractor.recipe</a><a class="headerlink" href="#module-dractor.recipe" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-dractor.wsman">
+<span id="dractor-wsman"></span><h2><a class="toc-backref" href="#id6">dractor.wsman</a><a class="headerlink" href="#module-dractor.wsman" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="dractor.wsman.HTTPConfig">
+<em class="property">class </em><code class="descclassname">dractor.wsman.</code><code class="descname">HTTPConfig</code><span class="sig-paren">(</span><em>connection_timeout=None</em>, <em>read_timeout=None</em>, <em>max_retries=None</em>, <em>verify_ssl_cert=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.wsman.HTTPConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration settings controlling the usage of HTTP by the WSMANClient</p>
+<dl class="attribute">
+<dt id="dractor.wsman.HTTPConfig.max_retries">
+<code class="descname">max_retries</code><a class="headerlink" href="#dractor.wsman.HTTPConfig.max_retries" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>int</em> &#8211; The maximum number of retries allowed for failed HTTP requests.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dractor.wsman.HTTPConfig.timeouts">
+<code class="descname">timeouts</code><a class="headerlink" href="#dractor.wsman.HTTPConfig.timeouts" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>tuple</em> &#8211; A tuple containing the connection_timout and read_timeout values.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <code class="docutils literal"><span class="pre">max_retries</span></code> field will indicate the maximum number of
+retries that should be made for &#8216;failed&#8217; HTTP requests.  In this
+context, an HTTP request is considered to be a &#8216;failed&#8217; one,
+if the HTTP status code was not in the success range (e.g. 200s).</p>
+</div>
+<dl class="attribute">
+<dt id="dractor.wsman.HTTPConfig.DEFAULT_CONNECTION_TIMEOUT">
+<code class="descname">DEFAULT_CONNECTION_TIMEOUT</code><em class="property"> = 12.1</em><a class="headerlink" href="#dractor.wsman.HTTPConfig.DEFAULT_CONNECTION_TIMEOUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dractor.wsman.HTTPConfig.DEFAULT_MAX_RETRIES">
+<code class="descname">DEFAULT_MAX_RETRIES</code><em class="property"> = 3</em><a class="headerlink" href="#dractor.wsman.HTTPConfig.DEFAULT_MAX_RETRIES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dractor.wsman.HTTPConfig.DEFAULT_READ_TIMEOUT">
+<code class="descname">DEFAULT_READ_TIMEOUT</code><em class="property"> = 120</em><a class="headerlink" href="#dractor.wsman.HTTPConfig.DEFAULT_READ_TIMEOUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dractor.wsman.HTTPConfig.DEFAULT_SSL_CERT_VERIFY">
+<code class="descname">DEFAULT_SSL_CERT_VERIFY</code><em class="property"> = False</em><a class="headerlink" href="#dractor.wsman.HTTPConfig.DEFAULT_SSL_CERT_VERIFY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">timeouts</code></dt>
+<dd><p>Timeouts tuple for use with requests HttpClient</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dractor.wsman.WSMANClient">
+<em class="property">class </em><code class="descclassname">dractor.wsman.</code><code class="descname">WSMANClient</code><span class="sig-paren">(</span><em>host</em>, <em>port=443</em>, <em>auth_config=None</em>, <em>http_config=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.wsman.WSMANClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Low level WSMAN client for DRAC</p>
+<dl class="method">
+<dt id="dractor.wsman.WSMANClient.enumerate">
+<code class="descname">enumerate</code><span class="sig-paren">(</span><em>dcim_class</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.wsman.WSMANClient.enumerate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumerate</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dractor.wsman.WSMANClient.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>dcim_class</em>, <em>selectors</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.wsman.WSMANClient.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>classname is the DCIM class name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dractor.wsman.WSMANClient.identify">
+<code class="descname">identify</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dractor.wsman.WSMANClient.identify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perfrom a WSMAN Identify call</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="dractor.wsman.WSMANClient.invoke">
+<code class="descname">invoke</code><span class="sig-paren">(</span><em>dcim_class</em>, <em>method</em>, <em>properties</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.wsman.WSMANClient.invoke" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do an invoke</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="dractor.wsman.WSMANBasicAuthConfig">
+<em class="property">class </em><code class="descclassname">dractor.wsman.</code><code class="descname">WSMANBasicAuthConfig</code><span class="sig-paren">(</span><em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#dractor.wsman.WSMANBasicAuthConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configuration settings for using HTTP Basic Auth to authenticate with the Drac WSMAN endpoint</p>
+<dl class="attribute">
+<dt id="dractor.wsman.WSMANBasicAuthConfig.username">
+<code class="descname">username</code><a class="headerlink" href="#dractor.wsman.WSMANBasicAuthConfig.username" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The username</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dractor.wsman.WSMANBasicAuthConfig.password">
+<code class="descname">password</code><a class="headerlink" href="#dractor.wsman.WSMANBasicAuthConfig.password" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>str</em> &#8211; The password</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="dractor.wsman.WSMANBasicAuthConfig.DEFAULT_PASSWORD">
+<code class="descname">DEFAULT_PASSWORD</code><em class="property"> = 'calvin'</em><a class="headerlink" href="#dractor.wsman.WSMANBasicAuthConfig.DEFAULT_PASSWORD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="dractor.wsman.WSMANBasicAuthConfig.DEFAULT_USERNAME">
+<code class="descname">DEFAULT_USERNAME</code><em class="property"> = 'root'</em><a class="headerlink" href="#dractor.wsman.WSMANBasicAuthConfig.DEFAULT_USERNAME" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Public API</a><ul>
+<li><a class="reference internal" href="#module-dractor">dractor</a></li>
+<li><a class="reference internal" href="#module-dractor.dcim">dractor.dcim</a></li>
+<li><a class="reference internal" href="#module-dractor.dcim.base">dractor.dcim.base</a></li>
+<li><a class="reference internal" href="#dractor-dcim-v2303030">dractor.dcim.v2303030</a></li>
+<li><a class="reference internal" href="#module-dractor.recipe">dractor.recipe</a></li>
+<li><a class="reference internal" href="#module-dractor.wsman">dractor.wsman</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="architecture.html" title="previous chapter">Architecture</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/api.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, anonymous.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5a1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/api.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Background &#8212; dractor 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="dractor 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="prev" title="Welcome to dractor’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="background">
+<h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#overview" id="id3">Overview</a></li>
+<li><a class="reference internal" href="#web-services-management" id="id4">Web Services Management</a></li>
+<li><a class="reference internal" href="#dell-dcim-profile-documents" id="id5">Dell DCIM Profile Documents</a></li>
+<li><a class="reference internal" href="#managed-object-format" id="id6">Managed Object Format</a></li>
+<li><a class="reference internal" href="#using-the-lifecycle-api-through-dractor" id="id7">Using the Lifecycle API through dractor</a></li>
+<li><a class="reference internal" href="#dractor-recipes" id="id8">Dractor recipes</a></li>
+<li><a class="reference internal" href="#additional-resources" id="id9">Additional Resources</a></li>
+<li><a class="reference internal" href="#terminology" id="id10">Terminology</a></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h2><a class="toc-backref" href="#id3">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The Dell Lifecycle Controller provides a way to programatically
+manage servers.  An end user can perform BIOS configuration, firmware
+upgrades, and RAID configuration all through the Lifecycle Controller
+by using the DMTF&#8217;s Web Services Management standard (WS-Man or
+WSMAN).  The dractor library targets the second generation of this API
+which is available on 12G Dell servers and greater.  The goal of
+dractor is to provide simple, programmatic access to this API via
+Python3.</p>
+</div>
+<div class="section" id="web-services-management">
+<h2><a class="toc-backref" href="#id4">Web Services Management</a><a class="headerlink" href="#web-services-management" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://www.dmtf.org/standards/wsman">Web Services Management</a> is a
+DMTF standard.  It is a <a class="reference external" href="https://en.wikipedia.org/wiki/SOAP">SOAP-based</a> protocol that allows for
+management of computer systems.  Multiple vendors adopted this
+protocol, but dractor is focused solely on supporting Dell 12G and
+greater servers.</p>
+<p>Dell&#8217;s Lifecycle Controller runs as a process on the iDRAC.  Dractor uses
+WS-Man to communicate with the Lifecycle Controller over HTTPS.</p>
+<p>WS-Man supports a number of fundamental operations.  The most important are:</p>
+<ul class="simple">
+<li><strong>Enumerate</strong>: Enumeration will return all instances of a particular type.  For example, to obtain information about all the NICs in a server, you can enumerate the <code class="docutils literal"><span class="pre">DCIM_NICView</span></code> class.</li>
+<li><strong>Get</strong>: Get retrieves information about a particular hardware or software component for a given class.  Components are usually referenced by their FQDD (Fully Qualified Device Descriptor).  For example, to request information about the first NIC in a system, you would perform a <code class="docutils literal"><span class="pre">get</span></code> of the class <code class="docutils literal"><span class="pre">DCIM_NICView</span></code> for the FQDD <code class="docutils literal"><span class="pre">NIC.Slot.1-1-1</span></code>.</li>
+<li><strong>Invoke</strong>: Invoke calls a remote method on the Lifecycle Controller.  For example, to power cycle a server, you would <code class="docutils literal"><span class="pre">invoke</span></code> the method <code class="docutils literal"><span class="pre">RequestPowerStateChange</span></code> provided by the <code class="docutils literal"><span class="pre">DCIM_CSPowerManagementService</span></code> class.</li>
+</ul>
+<p>Dractor abstracts these operations for you, but it is still important to be
+familiar with them.</p>
+</div>
+<div class="section" id="dell-dcim-profile-documents">
+<h2><a class="toc-backref" href="#id5">Dell DCIM Profile Documents</a><a class="headerlink" href="#dell-dcim-profile-documents" title="Permalink to this headline">¶</a></h2>
+<p>The Dell DCIM Profiles are a set of documents grouped into general
+areas that document the classes and methods supported by the Lifecycle
+Controller via WS-Man.  These classes are extensions of the classes
+defined in the <a class="reference external" href="http://www.dmtf.org/standards/cim">DMTF&#8217;s Common Information Model</a>.  This model defines a set of
+classes that structure how information is provided by the Lifecycle
+Controller.  Dell has extended the CIM as <a class="reference external" href="http://en.community.dell.com/techcenter/systems-management/w/wiki/1837">DCIM - Dell CIM Extensions</a></p>
+<p>In the previous section on WS-Man a few classes like <code class="docutils literal"><span class="pre">DCIM_NICView</span></code> were
+mentioned in passing.  The <code class="docutils literal"><span class="pre">DCIM_NICView</span></code> class is part of the <a class="reference external" href="http://en.community.dell.com/techcenter/extras/m/white_papers/20347676">DCIM
+Simple NIC Profile</a>.
+This profile contains extensive documentation on the <code class="docutils literal"><span class="pre">DCIM_NICView</span></code> and
+related classes.</p>
+<p>It is worthwhile browsing the <a class="reference external" href="http://en.community.dell.com/techcenter/systems-management/w/wiki/1906.dcim-library-profile">DCIM Extensions Library Profile
+Collection</a>
+to get a feel for what is possible through the Lifecycle Controller.</p>
+</div>
+<div class="section" id="managed-object-format">
+<h2><a class="toc-backref" href="#id6">Managed Object Format</a><a class="headerlink" href="#managed-object-format" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://en.community.dell.com/techcenter/systems-management/w/wiki/1840.dcim-library-mof">Dell Managed Object Format</a>
+files provide a computer friendly description of the classes and
+methods supported by the Lifecycle Controller.  A bundle of MOF files
+are released with every iDRAC + Lifecycle Controller software release.
+In addition to documenting supported classes, attributes and methods,
+they contain valuable metadata such as docstrings or how to translate
+values returned by the Lifecycle Controller.  Dractor uses these MOF
+files to auto-generate Python code and documentation.</p>
+</div>
+<div class="section" id="using-the-lifecycle-api-through-dractor">
+<h2><a class="toc-backref" href="#id7">Using the Lifecycle API through dractor</a><a class="headerlink" href="#using-the-lifecycle-api-through-dractor" title="Permalink to this headline">¶</a></h2>
+<p>Dractor attempts to present the Dell CIM Extensions provided by the
+Lifecycle Controller directly in Python.  It does things to make the
+API work well in Python, but overall takes great care to present the
+API as-is.</p>
+<p>For example, to power cycle using WS-Man from the command line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>wsman invoke -a &quot;RequestStateChange&quot; http://schemas.dell.com/wbem/
+wscim/1/cim-schema/2/root/dcim/DCIM_ComputerSystem?CreationClassName=
+&quot;DCIM_ComputerSystem&quot;,Name=&quot;srv:system&quot; -h 192.168.0.120 -P 443 -u root
+-p calvin -c Dummy -y basic -V –v -k &quot;RequestedState=2&quot;
+</pre></div>
+</div>
+<p>Using dractor, this call becomes much more straight forward:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dractor.dcim</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s1">&#39;192.168.0.120&#39;</span><span class="p">,</span> <span class="mi">443</span><span class="p">,</span> <span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="s1">&#39;calvin&#39;</span><span class="p">)</span>
+<span class="n">client</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">DCIM_ComputerSystem</span><span class="o">.</span><span class="n">StateChange</span><span class="p">(</span><span class="n">RequestedState</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To get a feel for what dractor does behind the scenes, you can take a look at
+the process of interacting with WS-Man via the command line in
+<a class="reference external" href="http://en.community.dell.com/techcenter/systems-management/w/wiki/4374.how-to-build-and-execute-wsman-method-commands">How to Build and Execute WSMAN Method Commands</a>.</p>
+</div>
+<div class="section" id="dractor-recipes">
+<h2><a class="toc-backref" href="#id8">Dractor recipes</a><a class="headerlink" href="#dractor-recipes" title="Permalink to this headline">¶</a></h2>
+<p>Dractor contains a number of recipes to demonstrate using the
+Lifecycle Controller API to do useful things.  Recipes are based
+on a class that provides higher level functionality such as polling
+for Lifecycle Controller readiness.</p>
+</div>
+<hr class="docutils" />
+<div class="section" id="additional-resources">
+<h2><a class="toc-backref" href="#id9">Additional Resources</a><a class="headerlink" href="#additional-resources" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="dell">
+<h3>Dell<a class="headerlink" href="#dell" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="http://en.community.dell.com/techcenter/">Dell&#8217;s Tech Center</a>:<ul>
+<li><a class="reference external" href="http://en.community.dell.com/techcenter/systems-management/w/wiki/1837">Tech Center&#8217;s Wiki</a></li>
+<li><a class="reference external" href="http://en.community.dell.com/techcenter/systems-management/w/wiki/4374.how-to-build-and-execute-wsman-method-commands">How to Build and Execute WSMAN Method Commands</a></li>
+<li><a class="reference external" href="http://en.community.dell.com/techcenter/systems-management/w/wiki/3204.dell-remote-access-controller-drac-idrac">DRAC</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="dmtf">
+<h3>DMTF<a class="headerlink" href="#dmtf" title="Permalink to this headline">¶</a></h3>
+<p>The Distributed Management Task Force (DMTF) maintains a website with various specifications etc.</p>
+<ul class="simple">
+<li>Several PDFs are available for various specifications associated with <a class="reference external" href="https://www.dmtf.org/standards/wsman">WS-Man</a></li>
+</ul>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="terminology">
+<h2><a class="toc-backref" href="#id10">Terminology</a><a class="headerlink" href="#terminology" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Term</th>
+<th class="head">Definition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Common Information Model (CIM)</td>
+<td><p class="first">The Common Information Model (CIM) is an open standard that defines how managed elements in an IT
+environment are represented as a common set of objects and relationships between them. This is
+intended to allow consistent management of these managed elements, independent of their manufacturer
+or provider. CIM provides a common definition of management information for systems, networks,
+applications and services, and allows for vendor extensions.</p>
+<p class="last">&#8211; From <cite>http://en.community.dell.com/techcenter/systems-management/w/wiki/1838</cite></p>
+</td>
+</tr>
+<tr class="row-odd"><td>Dell CIM Extensions Library (DCIM)</td>
+<td><p class="first">Welcome to the Dell CIM Extensions Library. This DCIM area contains specifications of Dell-specific system
+management instrumentation for server, desktop, and mobile platforms. Read more about the purpose and scope of this library.</p>
+<p>Dell systems are moving to employ the DMTF Common Information Model (CIM) as the data format for local and
+remote system management. In some cases, Dell needs some extended properties and functions that are not
+described in the current CIM standards, and we create &#8220;extension&#8221; specs to cover these cases. Extension specs are published here.</p>
+<p>The library also contains other informative documents, such as white papers and diagrams of CIM class structures and instance structures.</p>
+<p class="last">&#8211; From <cite>http://en.community.dell.com/techcenter/systems-management/w/wiki/1837</cite></p>
+</td>
+</tr>
+<tr class="row-even"><td>Web Services Management (WS-Man or WSMAN)</td>
+<td><p class="first">The DMTF’s Web Services Management (WS-Man) provides interoperability between management applications and managed resources, and
+identifies a core set of web service specifications and usage requirements that expose a common set of operations central to all systems
+management. WS-Man has been adopted and published by the International Organization for Standardization (ISO) as ISO/IEC 17963:2013.</p>
+<p>A SOAP-based protocol for managing computer systems (e.g., personal computers, workstations, servers, smart devices), WS-Man supports web
+services and helps constellations of computer systems and network-based services collaborate seamlessly.</p>
+<p>The standard has the ability to:</p>
+<ul class="simple">
+<li>Get, put (update), create, and delete individual resource instances, such as settings and dynamic values</li>
+<li>Enumerate the contents of containers and collections, such as large tables and logs</li>
+<li>Subscribe to events emitted by managed resources</li>
+<li>Execute specific management methods with strongly typed input and output parameters</li>
+</ul>
+<p>The protocol and transport in WS-Man have been decoupled, to ensure interoperability is not dependent on specific versions of
+encryption algorithms, such as Transport Layer Security (TLS).</p>
+<p class="last">&#8211; From the <a class="reference external" href="https://www.dmtf.org/standards/wsman">DMTF page on wsman</a></p>
+</td>
+</tr>
+<tr class="row-odd"><td>FQDD</td>
+<td>Fully Qualified Device Descriptor.  It is a string that references a particular part of the computer system (such as a NIC) or software instance.  It can be thought of as a primary key in a database.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Background</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#web-services-management">Web Services Management</a></li>
+<li><a class="reference internal" href="#dell-dcim-profile-documents">Dell DCIM Profile Documents</a></li>
+<li><a class="reference internal" href="#managed-object-format">Managed Object Format</a></li>
+<li><a class="reference internal" href="#using-the-lifecycle-api-through-dractor">Using the Lifecycle API through dractor</a></li>
+<li><a class="reference internal" href="#dractor-recipes">Dractor recipes</a></li>
+<li><a class="reference internal" href="#additional-resources">Additional Resources</a><ul>
+<li><a class="reference internal" href="#dell">Dell</a></li>
+<li><a class="reference internal" href="#dmtf">DMTF</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#terminology">Terminology</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to dractor&#8217;s documentation!</a></li>
+      <li>Next: <a href="usage.html" title="next chapter">Usage</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/background.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, anonymous.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5a1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/background.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

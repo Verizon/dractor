@@ -1,0 +1,321 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Architecture &#8212; dractor 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="dractor 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Public API" href="api.html" />
+    <link rel="prev" title="Recipes" href="recipe.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="architecture">
+<h1>Architecture<a class="headerlink" href="#architecture" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#overview" id="id1">Overview</a></li>
+<li><a class="reference internal" href="#required-reading" id="id2">Required Reading</a></li>
+<li><a class="reference internal" href="#dractor-components" id="id3">Dractor Components</a></li>
+<li><a class="reference internal" href="#python-ws-man-client" id="id4">Python WS-Man client</a></li>
+<li><a class="reference internal" href="#the-dractor-dcim-client" id="id5">The dractor DCIM client</a></li>
+<li><a class="reference internal" href="#code-generation" id="id6">Code Generation</a></li>
+<li><a class="reference internal" href="#dcim-base-classes" id="id7">DCIM Base Classes</a></li>
+<li><a class="reference internal" href="#types" id="id8">Types</a></li>
+<li><a class="reference internal" href="#recipes" id="id9">Recipes</a></li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h2><a class="toc-backref" href="#id1">Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The dractor client is split into two main components.  These break
+down into roughly the How and the What.  The how is how do we talk to
+the WS-Man endpoint on the Lifecycle Controller.  How do properly put
+together a SOAP request and process the response?  How do we
+authenticate?  How do we call a WS-Man method in a generic way?  The
+other part is the What.  What API calls are supported by the Lifecycle
+Controller?  What arguments are required and optional?  The what part
+is the handled via auto-code generation which takes the MOF definition
+files provided by Dell and use Jinja2 to auto-generate Python code to
+present the Lifecycle Controller WS-Man API.  This auto-generated code
+calls the &#8216;how&#8217; part of dractor.</p>
+</div>
+<div class="section" id="required-reading">
+<h2><a class="toc-backref" href="#id2">Required Reading</a><a class="headerlink" href="#required-reading" title="Permalink to this headline">¶</a></h2>
+<p>These links will provide the background necessary to understand the
+architecture of dractor.</p>
+<ul class="simple">
+<li>The <a class="reference internal" href="background.html"><span class="doc">background document</span></a> included with dractor.</li>
+<li><a class="reference external" href="http://en.community.dell.com/techcenter/systems-management/w/wiki/4374.how-to-build-and-execute-wsman-method-commands">How to Build and Execute WSMAN Method Commands</a> will give a good understanding of the many things dractor takes care of under the hood.</li>
+</ul>
+</div>
+<div class="section" id="dractor-components">
+<h2><a class="toc-backref" href="#id3">Dractor Components</a><a class="headerlink" href="#dractor-components" title="Permalink to this headline">¶</a></h2>
+<p>The main components to dractor are:</p>
+<ul class="simple">
+<li>A low level Python WS-Man client.</li>
+<li>A higher level client that provides the DCIM classes to the end user.</li>
+<li>A MOF parser and template engine to auto-generate DCIM classes from the Dell provided MOF files.</li>
+<li>Base classes for the auto-generated DCIM classes to inherit from.</li>
+<li>Special types for data returned by the Lifecycle Controller and required by certain methods (e.g., <code class="docutils literal"><span class="pre">DCIM_SoftwareInstallationService</span></code>).</li>
+<li>A collection of recipes to demonstrate how to utilize the dractor client to perform useful tasks.</li>
+</ul>
+</div>
+<div class="section" id="python-ws-man-client">
+<h2><a class="toc-backref" href="#id4">Python WS-Man client</a><a class="headerlink" href="#python-ws-man-client" title="Permalink to this headline">¶</a></h2>
+<p>We interact with the Lifecycle Controller via <a class="reference external" href="https://en.wikipedia.org/wiki/WS-Management">Web Services Management
+(WS-Man or WSMan)</a>.
+This is protocol is built on top of <a class="reference external" href="https://en.wikipedia.org/wiki/SOAP">SOAP</a> using HTTPS as the transport.
+WS-Man supports a number of basic operations:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>Get</strong> and <strong>Enumerate</strong>: Get information from the Lifecycle Controller such as the current value for a BIOS setting or a list of all settings.</li>
+<li><strong>Invoke</strong>: Call a remote method such as blinking the chassis identification LED.</li>
+<li><strong>Identify</strong>: Returns basic information about the endpoint including the Lifecycle Controller version.</li>
+</ul>
+</div></blockquote>
+<p>In order to handle these primitive operations, dractor features an
+internal low-level WS-MAN client.  This client, <code class="docutils literal"><span class="pre">WSMANClient</span></code>, is
+located in <code class="docutils literal"><span class="pre">dractor.wsman</span></code> module.  <code class="docutils literal"><span class="pre">WSMANClient</span></code> is responsible
+for handling network communication, shielding the rest of dractor from
+SOAP/XML, and exposing the fundamental WS-Man methods above.  The
+<code class="docutils literal"><span class="pre">dractor.wsman</span></code> module is roughly divided into three parts.</p>
+<ul class="simple">
+<li><strong>Transport and interface</strong>: The <code class="docutils literal"><span class="pre">dractor.wsman._client</span></code> module contains <code class="docutils literal"><span class="pre">WSMANClient</span></code>.  The client uses <a class="reference external" href="http://docs.python-requests.org/en/master/">Requests</a> to handle the HTTPS transport layer to talk to the WS-Man endpoint on the Lifecycle Controller.  The WS-Man SOAP endpoint is <code class="docutils literal"><span class="pre">https://&lt;drac-ip&gt;/wsman</span></code>.   The client provides get, enumerate, identify and invoke.  The client also performs auto-discovery for Invoke method selectors by performing a WS-Man enumeration on the class being called to determine the proper selectors.</li>
+<li><strong>SOAP Request Generation</strong>: The <code class="docutils literal"><span class="pre">dractor.wsman._envelopes</span></code> module contains routines used by <code class="docutils literal"><span class="pre">WSMANClient</span></code> to compose SOAP WS-Man requests for Get, Enumerate, Invoke, and Identify.  The SOAP XML documents are composed using <a class="reference external" href="http://lxml.de/index.html">lxml</a> and basic templates.</li>
+<li><strong>SOAP Response Parser</strong>: The <code class="docutils literal"><span class="pre">dractor.wsman._parsers</span></code> module contains routines used by <code class="docutils literal"><span class="pre">WSMANClient</span></code> to parse the SOAP responses received from the Lifecycle Controller.  Responses are transformed from XML into Python dictionaries.</li>
+</ul>
+</div>
+<div class="section" id="the-dractor-dcim-client">
+<h2><a class="toc-backref" href="#id5">The dractor DCIM client</a><a class="headerlink" href="#the-dractor-dcim-client" title="Permalink to this headline">¶</a></h2>
+<p>This layer is built on top of the WS-Man client layer.  It provides the
+methods called by the code auto-generated from Dell&#8217;s MOF files.  It
+also contains the client exposed to end users of dractor.  This layer
+is located in <code class="docutils literal"><span class="pre">dractor.dcim</span></code>.</p>
+<div class="section" id="client-autocreation">
+<h3>Client Autocreation<a class="headerlink" href="#client-autocreation" title="Permalink to this headline">¶</a></h3>
+<p>The client automatically loads and exposes the classes that were
+auto-generated from Dell&#8217;s MOF files based on Lifecycle Controller
+version.  The client object exposes, as attributes, classes and
+factories supported by the Lifecycle Controller.  The client is
+designed to be easy to interact with via a python REPL such as
+<a class="reference external" href="https://bpython-interpreter.org/">bpython</a>.</p>
+<p>Versioning is done by the iDRAC + Lifecycle Controller release
+version, starting with 2.30.30.30 as the minimum supported version.
+Given that future DRAC releases are generally backwards compatible,
+the client will work with newer versions by choosing the most recent
+set of objects.</p>
+</div>
+<div class="section" id="get-and-enumeratable-objects">
+<h3>Get and Enumeratable Objects<a class="headerlink" href="#get-and-enumeratable-objects" title="Permalink to this headline">¶</a></h3>
+<p>Object that support get or enumerate WS-Man calls need to be created.
+This is accomplished via the <code class="docutils literal"><span class="pre">DCIMFactory</span></code> parent class.  A single
+instance is returned for calls to the <code class="docutils literal"><span class="pre">get</span></code> factory method while a
+dictionary of instances is returned by <code class="docutils literal"><span class="pre">enumerate</span></code>.  The keys for
+the dictionary are typically FQDDs, as defined by the MOF files.  If
+the MOF file does not define a key, there is some logic to
+automatically discover a key.  For example, if no key for enumerations is
+defined in the MOF file, but there is a FQDD attribute returned by the
+Lifecycle Controller, that will be used as the key for the dictionary.</p>
+</div>
+</div>
+<div class="section" id="code-generation">
+<h2><a class="toc-backref" href="#id6">Code Generation</a><a class="headerlink" href="#code-generation" title="Permalink to this headline">¶</a></h2>
+<p>In order to present the Lifecycle controller API as python modules, we
+rely on parsing Dell provided MOF files.  This part of dractor lives
+in <code class="docutils literal"><span class="pre">dractor/_code_generation</span></code>.  The MOF files are used to
+auto-generate code when the dractor wheel is built, there is no
+auto-generation when the client itself is run.  The code that is
+generated resides in the <code class="docutils literal"><span class="pre">dractor.dcim.v2303030</span></code> for version
+2.30.30.30 of the MOF files.  Future versions will be their own
+modules following the same pattern.  It should be noted that new
+iDRAC + Lifecycle Controller are generally backwards compatible.
+This means that there is no hard requirement to ingest MOF files
+for every new firmware release unless new calls are desired.</p>
+<div class="section" id="mof-files">
+<h3>MOF Files<a class="headerlink" href="#mof-files" title="Permalink to this headline">¶</a></h3>
+<p>Dell provides MOF files with every iDRAC + Lifecycle controller
+release.  The files contain information the Lifecycle controller API.
+The contain the supported classes, methods, and arguments.  The also
+contain valuable metadata like documentation strings or whether a
+particular argument is required or optional.</p>
+</div>
+<div class="section" id="parsing-mof-files">
+<h3>Parsing MOF files<a class="headerlink" href="#parsing-mof-files" title="Permalink to this headline">¶</a></h3>
+<p>Dractor uses <a class="reference external" href="http://igordejanovic.net/textX/">Igor Dejanovic&#8217;s textX</a> to implement a parser for MOF
+files.  The definition for the parser is located in
+<code class="docutils literal"><span class="pre">_code_generation/data/textex</span></code>.  This parser is used to turn a MOF file
+into a collection of objects.  The object definitions are in
+<code class="docutils literal"><span class="pre">_code_generation/mof.py</span></code>.</p>
+</div>
+<div class="section" id="generating-code-to-reflect-the-dell-lifecycle-api">
+<h3>Generating Code to reflect the Dell Lifecycle API<a class="headerlink" href="#generating-code-to-reflect-the-dell-lifecycle-api" title="Permalink to this headline">¶</a></h3>
+<p>The objects created by the textX parser are used directly in a Jinja2
+template to auto-generate a python module from each MOF file.  Here is
+where the docstrings are defined.  The template uses generic internal
+dractor calls to implement each call.  The templates are located in
+<code class="docutils literal"><span class="pre">dractor/_code_generation/data/templates</span></code>.</p>
+</div>
+</div>
+<div class="section" id="dcim-base-classes">
+<h2><a class="toc-backref" href="#id7">DCIM Base Classes</a><a class="headerlink" href="#dcim-base-classes" title="Permalink to this headline">¶</a></h2>
+<p>The base classes for the auto-generated code are located in <code class="docutils literal"><span class="pre">dractor.dcim.base</span></code>.
+The automatically generated code uses these classes as base classes.</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">DCIMFactory</span></code>: This is the base class for any DCIM object that support get or enumerate.</li>
+<li><code class="docutils literal"><span class="pre">DCIMAttributeObject</span></code>: This is the base class for objects returned by <code class="docutils literal"><span class="pre">DCIMFactory</span></code> children.  For example, <code class="docutils literal"><span class="pre">DCIM_NICViewFactory</span></code> yields objects derived from <code class="docutils literal"><span class="pre">DCIMAttributeObject</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">DCIMMethodObject</span></code>: This is the base class for any object that have methods.  It contains methods to allow end users to pass in mapped or unmapped values as arguments.  It is responsible for raising an exception if we get back an error from the Lifecycle Controller.  It also performs converts the list of arguments supplied to the method into an array of properties for use at the <code class="docutils literal"><span class="pre">dcim.wsman</span></code> layer.</li>
+</ul>
+<p>Some classes support both enumeration and invoke.  We use multiple inheritance in this case.</p>
+</div>
+<div class="section" id="types">
+<h2><a class="toc-backref" href="#id8">Types</a><a class="headerlink" href="#types" title="Permalink to this headline">¶</a></h2>
+<p>There are some special data types that are generally used in dractor.
+They are defined in <code class="docutils literal"><span class="pre">dractor.types</span></code>.</p>
+<div class="section" id="dcimqualifiedvalue">
+<h3>DCIMQualifiedValue<a class="headerlink" href="#dcimqualifiedvalue" title="Permalink to this headline">¶</a></h3>
+<p>This is a class that encapsulates every value returned by the
+Lifecycle Controller.  The reason for this is that the Dell MOF files
+contain metadata on how to handle certain values.  A common form of
+metadata is a <code class="docutils literal"><span class="pre">ValueMap</span></code>.  This maps between integer values returned or
+accepted by the Lifecycle Controller API and human readable
+representations.</p>
+</div>
+<div class="section" id="cim-reference">
+<h3>CIM_Reference<a class="headerlink" href="#cim-reference" title="Permalink to this headline">¶</a></h3>
+<p>While the majority of data passed to the Lifecycle Controller via
+WS-Man are just strings, there are occasional <code class="docutils literal"><span class="pre">CIM_Reference</span></code> types that
+need to be passed in.  These values need to be enclosed with
+additional XML when passed into the Lifecycle Controller.  Since these
+types span <code class="docutils literal"><span class="pre">dractor.dcim</span></code> and <code class="docutils literal"><span class="pre">dractor.wsman</span></code> modules, they are in
+<code class="docutils literal"><span class="pre">dractor.types</span></code>.</p>
+</div>
+<div class="section" id="cim-softwareidentity">
+<h3>CIM_SoftwareIdentity<a class="headerlink" href="#cim-softwareidentity" title="Permalink to this headline">¶</a></h3>
+<p>Methods in <code class="docutils literal"><span class="pre">DCIM_SoftwareInstallationService</span></code> require this type in order
+to perform software updates.</p>
+</div>
+</div>
+<div class="section" id="recipes">
+<h2><a class="toc-backref" href="#id9">Recipes</a><a class="headerlink" href="#recipes" title="Permalink to this headline">¶</a></h2>
+<p>This is where we use the API to do useful things.  The bundled recipes
+are included to demonstrate the API and dractor.  Information about
+recipes is covered in the <a class="reference internal" href="recipe.html"><span class="doc">Recipe documentation</span></a></p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Architecture</a><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#required-reading">Required Reading</a></li>
+<li><a class="reference internal" href="#dractor-components">Dractor Components</a></li>
+<li><a class="reference internal" href="#python-ws-man-client">Python WS-Man client</a></li>
+<li><a class="reference internal" href="#the-dractor-dcim-client">The dractor DCIM client</a><ul>
+<li><a class="reference internal" href="#client-autocreation">Client Autocreation</a></li>
+<li><a class="reference internal" href="#get-and-enumeratable-objects">Get and Enumeratable Objects</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#code-generation">Code Generation</a><ul>
+<li><a class="reference internal" href="#mof-files">MOF Files</a></li>
+<li><a class="reference internal" href="#parsing-mof-files">Parsing MOF files</a></li>
+<li><a class="reference internal" href="#generating-code-to-reflect-the-dell-lifecycle-api">Generating Code to reflect the Dell Lifecycle API</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#dcim-base-classes">DCIM Base Classes</a></li>
+<li><a class="reference internal" href="#types">Types</a><ul>
+<li><a class="reference internal" href="#dcimqualifiedvalue">DCIMQualifiedValue</a></li>
+<li><a class="reference internal" href="#cim-reference">CIM_Reference</a></li>
+<li><a class="reference internal" href="#cim-softwareidentity">CIM_SoftwareIdentity</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#recipes">Recipes</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="recipe.html" title="previous chapter">Recipes</a></li>
+      <li>Next: <a href="api.html" title="next chapter">Public API</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/architecture.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, anonymous.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5a1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="_sources/architecture.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
