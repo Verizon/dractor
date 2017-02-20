@@ -1,0 +1,179 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_JobService
+// ==================================================================
+  [Version ( "1.0.0" ), Description(
+       "DCIM_JobService is a derivation of CIM_Service" )]
+class DCIM_JobService : CIM_Service {
+
+      [Description ( 
+        "The current number of jobs in the Job Store" )]
+  uint16 CurrentNumberOfJobs;
+   
+      [Description ( 
+        "The maximum number of jobs in the Job Store" )]
+  uint16 MaximumNumberOfJobs;
+   
+      [Description ( 
+        "Percentage of the MaximumNumberOfJobs which, when reached, will"
+        "cause all jobs that have been completed for longer than the"
+        "DeleteOnCompletetionTimeout to be deleted" )]
+  uint16 StartAutoDeleteAtThreshold;
+   
+      [Description ( 
+        "Jobs that have been completed for longer than the"
+        "DeleteOnCompletionTimeout will be deleted during the auto-delete" )]
+  uint16 DeleteOnCompletionTimeout;
+    
+    [Description ( 
+      "SetupJobQueue method schedule one more jobs in queue. " ), 
+       ValueMap { "0", "1" }, 
+       Values { "Success", "Failure"}]
+  uint32 SetupJobQueue
+  (
+        [IN]
+    string JobArray[], 
+     
+        [IN]
+    string StartTimeInterval,
+
+        [IN]
+    string UntilTime,
+
+        [OUT]
+    string MessageID,
+              
+        [OUT]
+    string Message,
+                  
+        [OUT]
+    string MessageArguments[]
+  );
+
+    [Description (
+          "DeleteJobQueue method deletes jobs that are not running. " ),
+       ValueMap { "0", "1" },
+       Values { "Success", "Failure" }]
+  uint32 DeleteJobQueue
+  (
+        [IN]
+    string JobID,
+       
+        [OUT]
+    string MessageID,
+
+        [OUT]
+    string Message,
+
+        [OUT]
+    string MessageArguments[]
+  );
+    
+    [Description (
+      "DeleteJobs method deletes jobs that are not running. " ),
+       ValueMap { "0", "1" },
+       Values { "Success", "Failure" }]
+  uint32 DeleteJobs
+  (
+        [IN]
+    string JobArray[],
+       
+        [OUT]
+    string MessageID,
+
+        [OUT]
+    string Message,
+
+        [OUT]
+    string MessageArguments[]
+  );
+
+    [Description (
+      "CreateRebootJob().This Method will return the jobID  for Rebootjob.")]
+  uint32 CreateRebootJob
+  (
+        [IN, Description(
+           "Input Parameter represents the type of Reboot "
+           "1 - PowerCycle"
+           "2 - Graceful Reboot without forced shutdown"
+           "3 - Graceful Reboot with forced shutdown")]
+    uint16 RebootJobType,
+    
+        [IN(false), OUT, Description(
+              "Error Message ID- can be used to index into Dell"
+              "Message registry files")]
+    string MessageID,
+    
+        [IN(false ), OUT, Description ( 
+              "Completed error message in English" )]
+    string Message,
+    
+        [IN(false), OUT, Description(
+          "Substitution variables for dynamic error messages.")]
+    string MessageArguments[],
+    
+        [IN(false), OUT, Description(
+              "Reference to instance CIM_ConcreteJob."
+              "CIM_ConcreteJob instance returns a JobId Value" 
+              "of update operation")]
+    CIM_ConcreteJob REF Job
+  );    
+   
+    [Description (
+      "SetDeleteOnCompletionTimeout().This Method will set the"
+      "job store auto-deletion policy.")]
+  uint32 SetDeleteOnCompletionTimeout 
+  (
+        [IN, Description(
+           "Timeout in minutes")]
+    uint16 DeleteOnCompletionTimeout,
+    
+        [IN(false), OUT, Description(
+              "Error Message ID- can be used to index into Dell"
+              "Message registry files")]
+    string MessageID,
+    
+        [IN(false ), OUT, Description ( 
+              "Completed error message in English" )]
+    string Message,
+    
+        [IN(false), OUT, Description(
+          "Substitution variables for dynamic error messages.")]
+    string MessageArguments[]
+  );
+
+    [Description (
+      "CreateJob().This Method will return the jobID for the requested job type.")]
+  uint32 CreateJob
+  (
+        [IN, Description ( "The job type of the CIM_ConcreteJob." ),
+             ValueMap { "0" },
+             Values { "Shutdown" }]
+    uint16 JobType,
+
+        [IN, Description ( "The job specific parameter names." )]
+    string JobParameterNames[],
+
+        [IN, Description ( "The job specific parameter values." )]
+    string JobParameterValues[],
+
+        [IN(false), OUT, Description(
+              "Error Message ID- can be used to index into Dell"
+              "Message registry files")]
+    string MessageID,
+
+        [IN(false ), OUT, Description (
+              "Completed error message in English" )]
+    string Message,
+
+        [IN(false), OUT, Description(
+          "Substitution variables for dynamic error messages.")]
+    string MessageArguments[],
+
+        [IN(false), OUT, Description(
+              "Reference to instance of CIM_ConcreteJob.")]
+    CIM_ConcreteJob REF Job
+  );
+
+};
+

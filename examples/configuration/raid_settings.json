@@ -1,0 +1,93 @@
+{
+    "Non-RAID": {
+        "Description": "Put all drives into JBOD mode",
+        "Selectors": {},
+        "Settings": {
+            "Disk.Bay.0": {
+                "RaidStatus": "Non-RAID"
+            },
+            "Disk.Bay.1": {
+                "RaidStatus": "Non-RAID"
+            },
+            "Disk.Bay.2": {
+                "RaidStatus": "Non-RAID"
+            }
+        }
+    },
+    "RAID1 for OS": {
+        "Description": "Create a RAID1 for the first two drives and make the third a spare",
+        "Selectors": {
+            "HardwareAttributes": {
+                "Disk.Bay.0": {
+                    "Model": "INTEL SSDSC2BB12"
+                },
+                "Disk.Bay.1": {
+                    "Model": "INTEL SSDSC2BB12"
+                }
+            }
+        },
+        "Settings": {
+            "Disk.Virtual.0": {
+                "Mode": "RAID1",
+                "SpanDepth": 1,
+                "SpanLength": 2,
+                "VirtualDiskName": "OS",
+                "PhysicalDiskIDs": [ "Disk.Bay.0", "Disk.Bay.1" ]
+            },
+            "Disk.Bay.2": {
+                "RaidStatus": "Spare"
+            }
+        }
+    },
+    "RAID 10": {
+        "Description": "Example of a giant RAID10 for a 26 bay enclosure",
+        "Selectors": {
+            "HardwareAttributes": {
+                "Enclosure": {
+                    "SlotCount": "26"
+                }
+            }
+        },
+        "Settings": {
+            "Disk.Bay.24": {
+                "RaidStatus": "Spare"
+            },
+            "Disk.Bay.25": {
+                "RaidStatus": "Spare"
+            },
+            "Disk.Virtual.0": {
+                "Mode": "RAID10",
+                "SpanDepth": 4,
+                "SpanLength": 6,
+                "VirtualDiskName": "OS",
+                "PhysicalDiskIDs": ["Disk.Bay.0", "Disk.Bay.1", "Disk.Bay.2", "Disk.Bay.3", "Disk.Bay.4", "Disk.Bay.5", "Disk.Bay.6", "Disk.Bay.7", "Disk.Bay.8", "Disk.Bay.9", "Disk.Bay.10", "Disk.Bay.11", "Disk.Bay.12", "Disk.Bay.13", "Disk.Bay.14", "Disk.Bay.15", "Disk.Bay.16", "Disk.Bay.17", "Disk.Bay.18", "Disk.Bay.19", "Disk.Bay.20", "Disk.Bay.21", "Disk.Bay.22", "Disk.Bay.23"]
+            }
+        }
+    },
+    "RAID 1 and 5": {
+        "Description": "RAID1 for OS and RAID5 for the rest in an 8 bay enclosure",
+        "Selectors": {
+            "HardwareAttributes": {
+                "Enclosure": {
+                    "SlotCount": "8"
+                }
+            }
+        },
+        "Settings": {
+            "Disk.Virtual.0": {
+                "Mode": "RAID1",
+                "SpanDepth": 1,
+                "SpanLength": 2,
+                "VirtualDiskName": "OS",
+                "PhysicalDiskIDs": [ "Disk.Bay.0", "Disk.Bay.1" ]
+            },
+            "Disk.Virtual.1": {
+                "Mode": "RAID5",
+                "SpanDepth": 1,
+                "SpanLength": 6,
+                "VirtualDiskName": "OS",
+                "PhysicalDiskIDs": [ "Disk.Bay.2", "Disk.Bay.3", "Disk.Bay.4", "Disk.Bay.5", "Disk.Bay.6", "Disk.Bay.7" ]
+            }
+        }
+    }
+}

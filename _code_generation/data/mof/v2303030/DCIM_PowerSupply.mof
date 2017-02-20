@@ -1,0 +1,10 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_PowerSupply 
+// ==================================================================  
+[
+       Description ("DCIM_PowerSupply is a derivation of  "
+       "CIM_PowerSupply. " ) ]
+class DCIM_PowerSupply : CIM_PowerSupply 
+{   
+};

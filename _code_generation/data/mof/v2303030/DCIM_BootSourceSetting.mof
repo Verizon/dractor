@@ -1,0 +1,36 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_BootSourceSetting
+// ==================================================================
+   [Description(
+       "DCIM_BootSourceSetting is a derivation of "
+       "CIM_BootSourceSetting.")]
+class DCIM_BootSourceSetting : CIM_BootSourceSetting
+{
+      [Description(
+          "Current assigned sequence of this boot source "
+          "in the ordered list." )]
+   uint8 CurrentAssignedSequence;
+    
+      [Description(
+          "Pending assigned sequence of this boot source "
+          "in the ordered list." )]
+   uint8 PendingAssignedSequence;
+    
+      [Description(
+          "Current status of this boot source" ),
+       ValueMap { "0", "1"},
+       Values { "Disabled", "Enabled"}]
+   uint8 CurrentEnabledStatus;
+    
+      [Description(
+          "Pending status of this boot source" ),
+       ValueMap { "0", "1"},
+       Values { "Disabled", "Enabled"}]
+   uint8 PendingEnabledStatus;
+   
+   [Description(
+          "ParentType of this boot source" )]
+   string BootSourceType;
+};
+

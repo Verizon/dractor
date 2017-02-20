@@ -1,0 +1,30 @@
+// ==================================================================
+//  DCIM_SELRecordLog
+// ==================================================================
+[Description (
+       "A class derived from RecordLog "        
+       "to represent the System Event Log." ) ]
+class DCIM_SELRecordLog : CIM_RecordLog
+{
+	      [Override ("ClearLog"), Description (
+          "This method is called to clear the system "
+          "event log of entries." ),
+       ValueMap { "0", "1", "2"},
+       Values { "Completed with No Error", "Not Supported", 
+          "Error" }]
+    uint32 ClearLog
+    (
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description ( 
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]
+    );
+};
+

@@ -1,0 +1,48 @@
+// ==================================================================
+//  DCIM_LCRecordLog
+// ==================================================================
+[Description (
+       "A class derived from RecordLog "        
+       "to represent the LifeCycle Log." ) ]
+class DCIM_LCRecordLog : CIM_RecordLog
+{
+      [Description ( 
+          "The OverwritePolicy is an integer enumeration that "
+          "indicates whether the log, represented by the "
+          "CIM_Log subclasses, can overwrite its entries." ), 
+       ValueMap { "0", "2", "7", "8" }, 
+       Values { "Unknown", "Wraps When Full", "Never Overwrites",
+          "Archives" }]
+   uint16 OverwritePolicy;
+
+      [Description (
+          "This method is called to retrieve the configuration "
+          "results available with the lifecycle log entry "
+          "instance." ),
+       ValueMap { "0", "1", "2"},
+       Values { "Completed with No Error", "Not Supported", 
+          "Error" }]
+    uint32 GetConfigResults
+    (
+        [IN, Description (
+             "JobID of the configuration job." )]
+      string JobID,
+        [IN, Description (
+             "Instance identifier of the lifecycle log entry "
+             "to retrieve the configuration details." )]
+      string InstanceID,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Configuration results available with the instance "
+             "of the lifecycle log entry" )]
+      string ConfigResults
+    );
+};
+

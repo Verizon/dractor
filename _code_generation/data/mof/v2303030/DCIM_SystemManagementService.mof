@@ -1,0 +1,218 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_SystemManagementService
+// ==================================================================
+  [Description(
+       "DCIM_SystemManagementService is a derivation of CIM_BIOSService "
+       "with extrinsic method extensions to support "
+       "System functionality")]
+class DCIM_SystemManagementService : CIM_BIOSService {
+      [Description (
+          "This method is called to modify instance of "
+          "SystemAttribute." ),
+       ValueMap { "0", "1", "2" },
+       Values { "Completed with No Error", "Not Supported", "Error" }]
+   uint32 SetAttribute(
+         [Required, IN, Description (
+             "This parameter is the FQDD of the SystemAttribute instances." )]
+      string Target,
+         [Required, IN, Description (
+             "A reference to a SystemAttribute specified by "
+             "AttributeName of the BIOSAttribute to be modified." )]
+      string AttributeName,
+         [Required, IN, Description (
+             "A new value to assign to the specified "
+             "SystemAttribute. If this value is valid, it will be "
+             "applied to the PendingValue property or the Currentvalue "
+             "property of the specified SystemAttribute." )]
+      string AttributeValue[],
+         [OUT, Description (
+             "Invoking the SetAttribute may result in a set "
+             "to CurrentValue property or the PendingValue "
+             "property. SetResult returns \"Set CurrentValue property\" if "
+             "CurrentValue is set or \"Set PendingValue property\" if "
+             "PendingValue is set." )]
+      string SetResult,
+         [OUT, Description (
+             "Invoking the SetAttribute may require "
+             "a reboot for the set to be effective. "
+             "Value \"Yes\" means a reboot is required. "
+             "Value \"No\" means a reboot is not required")]
+      string RebootRequired,
+         [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+         [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+         [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is called to modify instances of "
+          "SystemAttribute." ),
+       ValueMap { "0", "1", "2" },
+       Values { "Completed with No Error", "Not Supported", "Error" }]
+   uint32 SetAttributes(
+         [Required, IN, Description (
+             "This parameter is the FQDD of the SystemAttribute instances." )]
+      string Target,
+         [Required, IN, Description (
+             "A reference to a SystemAttribute specified by "
+             "AttributeName of the SystemAttribute to be modified." )]
+      string AttributeName[],
+         [Required, IN, Description (
+             "A new value to assign to the specified "
+             "SystemAttribute. If this value is valid, it will be "
+             "applied to the PendingValue property or the Currentvalue "
+             "property of the specified SystemAttribute." )]
+      string AttributeValue[],
+         [OUT, Description (
+             "Invoking the SetAttribute may result in a set "
+             "to CurrentValue property or the PendingValue "
+             "property. SetResult returns \"Set CurrentValue property\" if "
+             "CurrentValue is set or \"Set PendingValue property\" if "
+             "PendingValue is set." )]
+      string SetResult[],
+         [OUT, Description (
+             "Invoking the SetAttribute may require "
+             "a reboot for the set to be effective. "
+             "Value \"Yes\" means a reboot is required. "
+             "Value \"No\" means a reboot is not required")]
+      string RebootRequired[],
+         [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID[],
+         [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+         [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+      
+      [Description (
+          "This method is called to apply the pending values created "
+          "by the SetAttribute and SetAttributes methods" ),
+       ValueMap { "1", "2", "4096"},
+       Values   { "Not Supported", "Failed", "Job Created"}]
+   uint32 CreateTargetedConfigJob(
+        [Required,IN, Description(
+           "This Parameter is the FQDD of the SystemAttribute instances.")]
+      string Target,
+        [IN, Description(
+           "Input Parameter represents the type of Reboot "
+           "1 - PowerCycle "
+           "2 - Graceful Reboot without forced shutdown "
+           "3 - Graceful Reboot with forced shutdown. ")]
+      uint16 RebootJobType,
+       [IN, Description(
+           "Start Time of job in datetime format:yyyymmddhhmmss. "
+           "The string \"TIME_NOW\" means immediate.")]
+      string ScheduledStartTime,
+        [IN, Description(
+           "Scheduled end time for job execution in datetime "
+           "format:yyyymmddhhmmss. If StartTimeInterval is specified, "
+           "UntilTime has to be specified and vice versa. ")]
+      string UntilTime,
+
+        [OUT, Description (
+             "A reference to the ConcreteJob is returned" )]
+      CIM_ConcreteJob REF Job,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is called to cancel the pending values created "
+          "by the SetAttribute and SetAttributes methods." ),
+       ValueMap { "0", "1", "2"},
+       Values   { "Success", "Not Supported", "Failed"}]
+  uint32 DeletePendingConfiguration (
+        [Required,IN, Description(
+           "This Parameter is the FQDD of the SystemAttribute instances.")]
+      string Target,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+       [Description (
+          "This method is called to hide and unhide LCD Errors" ),
+       ValueMap { "0", "1", "2"},
+       Values { "Completed with No Error", "Not Supported", "Error" }]     
+  uint32 ShowErrorsOnLCD (
+        [Required, IN, Description(
+           "Input Parameter represents whether to Hide or unhide LCD Error "
+           "0 - False "
+           "1- True ")]
+      boolean Show,
+
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+      
+      
+       [Description (
+          "This method is used to turn on and off LEDs on the chassis in"
+          "order to identify it." ),
+       ValueMap { "0", "1", "2"},
+       Values { "Completed with No Error", "Not Supported", "Error" }]     
+  uint32 IdentifyChassis (
+        [Required, IN, Description(
+           "This parameter represents the requested state of the identifying LED."),
+       ValueMap { "0", "1", "2" },
+       Values { "Disabled", "Enabled", "Time Limited Enabled" }]
+      uint8 IdentifyState,
+      
+        [IN, Description(
+           "This parameter represents the requested time limit in seconds for identifying "
+           "chassis before the identifying LED turns back off. "
+           "The parameter shall be specified and non-NULL, if the IdentifyState parameter has "
+           "value 2 - Time Limited Enabled."), 
+          PUnit ( "second" ) ]
+      uint8 DurationLimit,
+
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+};

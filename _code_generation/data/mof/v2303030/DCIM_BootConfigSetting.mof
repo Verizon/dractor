@@ -1,0 +1,117 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_BootConfigSetting
+// ==================================================================
+   [Description(
+      "DCIM_BootConfigSetting is a derivation of "
+      "CIM_BootConfigSetting.")]
+class DCIM_BootConfigSetting : CIM_BootConfigSetting {
+    
+      [Description(
+          "An enumerated integer that indicates that the referenced "
+          "config is a default config or that "
+          "this information is unknown." ), 
+       ValueMap {"0", "1", "2"},
+       Values { "Unknown", "Is Default", "Is Not Default" }]
+   uint8 IsDefault;
+    
+      [Description(
+          "An enumerated integer that indicates that the referenced "
+          "config is a current config or that "
+          "this information is unknown." ),
+       ValueMap { "0", "1", "2" },
+       Values { "Unknown", "Is Current", "Is Not Current"}]
+   uint8 IsCurrent;
+    
+      [Description(
+          "An enumerated integer indicating whether or not the "
+          "referenced setting is the next setting to be applied. "
+          "For example, the application could take place on a "
+          "re-initialization, reset, reconfiguration request. This "
+          "could be a permanent setting, or a setting used only one "
+          "time, as indicated by the flag. If it is a permanent "
+          "setting then the setting is applied every time the "
+          "managed element reinitializes, until this flag is "
+          "manually reset. However, if it is single use, then the "
+          "flag is automatically cleared after the settings are "
+          "applied. Also note that if this flag is specified (i.e. "
+          "set to value other than \"Unknown\"), then this takes "
+          "precedence over any SettingData that may have been "
+          "specified as Default. For example: If the managed "
+          "element is a computer system, and the value of this flag "
+          "is \"Is Next\", then the setting will be effective next "
+          "time the system resets. And, unless this flag is "
+          "changed, it will persist for subsequent system resets. "
+          "However, if this flag is set to \"Is Next For Single "
+          "Use\", then this setting will only be used once and the "
+          "flag would be reset after that to \"Is Not Next\". So, "
+          "in the above example, if the system reboots in a quick "
+          "succession, the setting will not be used at the second "
+          "reboot." ),
+      ValueMap { "0", "1", "2", "3" },
+      Values { "Unknown", "Is Next", "Is Not Next", "Is Next For Single Use"}]
+   uint8 IsNext;
+    
+      [Description (
+          "This method is called to change the boot order of boot sources "
+          "within a configuration. \"source\" is an ordered array of "
+          "InstanceID of BootSourceSetting instances" ),
+       ValueMap { "0", "1", "2", "4096"},
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 ChangeBootOrderByInstanceID(
+         [IN, Description ( 
+             "An ordered array of BootSourceSettings.InstanceID" )]
+      string source[], 
+         [IN ( false ), OUT, Description ( 
+             "Reference to the job spawned if the operation "
+             "continues after the method returns. (May be null "
+             "if the task is completed)." )]
+      CIM_ConcreteJob REF Job,
+         [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID[],
+         [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+         [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is called to change the enabled status of "
+          "BootSourceSetting instances to \"Disable\" or \"Enable\" "
+          "\"source\" is an array of InstanceID of "
+          "BootSourceSetting instances" ),
+       ValueMap { "0", "1", "2", "4096"},
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 ChangeBootSourceState(
+         [IN, Description(
+             "A value of \"0\" will disable all the boot sources in "
+             "\"source\" array. "
+             "A value of \"1\" will enable all the boot sources in "
+             "\"source\" array. "),
+          ValueMap { "0", "1"},
+          Values { "Disable", "Enable"}]
+      uint8 EnabledState,
+         [IN, Description ( 
+             "An array of BootSourceSetting.InstanceID" )]
+      string source[], 
+         [IN ( false ), OUT, Description ( 
+             "Reference to the job spawned if the operation "
+             "continues after the method returns. (May be null "
+             "if the task is completed)." )]
+      CIM_ConcreteJob REF Job,
+         [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID[],
+         [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+         [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+};

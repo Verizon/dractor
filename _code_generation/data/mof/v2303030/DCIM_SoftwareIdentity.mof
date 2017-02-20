@@ -1,0 +1,77 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_SoftwareIdentity
+// ==================================================================
+[ Description (
+         "Describes the characteristics of the software that is "
+         "installed or available for installation.")] 
+class DCIM_SoftwareIdentity : CIM_SoftwareIdentity
+{
+
+  [Description (
+          "A string containing the Fully Qualified Device Description "
+          "A user-friendly name for the object. This property allows each "
+          " instance to define a user-friendly name in addition to its key "
+          " properties, identity data, and description information." )]
+   string FQDD;
+
+  [Description (
+          "A free-form string that represents the Installation Date "
+	 "in string format." )]
+   string InstallationDate;
+
+ [Description (
+          "A free-form string that represents the Revision Number"
+          "in string format." )]
+   string RevisionString;
+
+ [Description (
+          "A free-form string that represents the ComponentID"
+          "in string format." )]
+   string ComponentID;
+
+ [Description (
+          "A free-form string that represents the VendorID"
+          "in string format." )]
+   string VendorID;
+
+ [Description (
+          "A free-form string that represents the SubVendorID"
+          "in string format." )]
+   string SubVendorID;
+
+ [Description (
+          "A free-form string that represents the Device ID"
+                   "in string format.")]
+   string DeviceID;
+
+ [Description (
+          "A free-form string that represents the SubDevice ID"
+          "in string format.")]
+   string SubDeviceID;
+
+ [Description (
+          "A free-form string that represents the ComponentType"
+                   "in string format." )]
+   string ComponentType;
+
+ [Description (
+          "Boolean Varibale  that represents the impactsTPMmeasurements"
+         "in string boolean format." )]
+    boolean impactsTPMmeasurements = FALSE;
+
+[Description (
+          "Indicates whether the software is capable of being updated through the "
+          "WSMan interface. If TRUE, then the software can be updated "
+          "through WSMan, otherwise if FALSE, software is not updateable through "
+          "WSMan but may be updateable through another interface.")]
+   boolean Updateable; 
+   
+[Override ("Status"), Description (
+          "Indicates whether software is installed or is available for installation."), 
+       ValueMap { "Installed", "Available"},  
+       Values { "Installed", "Available for Installation"}]   
+   string Status;
+	
+};
+

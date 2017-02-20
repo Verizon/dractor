@@ -1,0 +1,278 @@
+// Copyright (c) 2011 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_NICCapabilities
+// ==================================================================
+
+   [Description(
+       "DCIM_NICCapabilities describes the capabilities of the NIC and "
+       "its port and partitions." )]
+class DCIM_NICCapabilities : CIM_Capabilities {
+      [Key, Description (
+          "Is a unique string containing the Fully Qualified Device "
+          "Description and view name. ")]
+   string InstanceID;
+
+      [Description (
+          "A string containing the Fully Qualified Device Description"
+          "A user-friendly name for the object. This property allows each "
+          "instance to define a user-friendly name in addition to its key "
+          "properties, identity data, and description information. "
+          "The FQDD represents the NIC's port's or partition's FQDD "
+          "for which this capabilities apply. ")]
+   string  FQDD;
+
+      [Description ( 
+          "The property details NIC's port's flex adddressing support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 FlexAddressingSupport;
+
+      [Description ( 
+          "The property details NIC's port's uEFI support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 uEFISupport;
+
+      [Description ( 
+          "The property details NIC's port's iSCSI offload support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 iSCSIOffloadSupport;
+
+      [Description ( 
+          "The property details NIC's port's iSCSI boot support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 iSCSIBootSupport;
+
+      [Description ( 
+          "The property details NIC's port's TCP Chimney support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 TCPChimneySupport;
+
+      [Description ( 
+          "The property details NIC's port's FCoE offload support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 FCoEOffloadSupport;
+
+      [Description ( 
+          "The property details NIC's port's FCoE boot support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 FCoEBootSupport;
+
+      [Description ( 
+          "The property details NIC's port's PXE boot support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 PXEBootSupport;
+
+      [Description ( 
+          "The property details NIC's port's for Virtual Function "
+          "of Single Root I/O Virtualization support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 VFSRIOVSupport;
+
+      [Description ( 
+          "The property details NIC's port's Wake-On-LAN support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 WOLSupport;
+
+      [Description ( 
+          "The property details NIC's port's network management pass "
+          "through support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 NWManagementPassThrough;
+
+      [Description ( 
+          "The property details NIC's port's OS-inband to "
+          "BMC-out-of-band management pass through support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 OSBMCManagementPassThrough;
+
+      [Description ( 
+          "The property details NIC's energy efficient "
+          "ethernet support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 EnergyEfficientEthernet;
+
+      [Description ( 
+          "The property details NIC's on chip thermal sensor support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 OnChipThermalSensor;
+
+      [Description ( 
+          "The property details NIC's partitioning support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 NicPartitioningSupport;
+
+      [Description ( 
+          "The property details NIC's port's remote PHY support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 RemotePHY;
+
+      [Description ( 
+          "The property details NIC's feature licensing support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 FeatureLicensingSupport;
+
+      [Description ( 
+          "The property details NIC's port's IPSec offload support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 IPSecOffloadSupport;
+
+      [Description ( 
+          "The property details NIC's port's secure MAC support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 MACSecSupport;
+
+      [Description ( 
+          "The property details NIC's port's RDMA support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 RDMASupport;
+
+      [Description ( 
+          "The property details NIC's port's Enhanced "
+          "Transmission Selection support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 ETS;
+
+      [Description ( 
+          "The property details NIC's port's priority flow control "
+          "support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 PriorityFlowControl;
+
+      [Description ( 
+          "The property details NIC's port's DCB Exchange protocol support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 DCBExchangeProtocol;
+
+      [Description ( 
+          "The property details NIC's port's congestion notification support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 CongestionNotification;
+
+      [Description ( 
+          "The property details NIC's port's VEB-VEPA (Virtual Ethernet Bridging "
+          "and  Virtual Ethernet Port Aggregator) - single channel support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 VEBVEPASingleChannel;
+
+      [Description ( 
+          "The property details NIC's port's VEB-VEPA (Virtual Ethernet Bridging "
+          "and  Virtual Ethernet Port Aggregator) multi channel "
+          "support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 VEBVEPAMultiChannel;
+
+      [Description ( 
+          "The property details NIC's port's EVB - Edge Virtual Bridging "
+          "modes support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 EVBModesSupport;
+
+      [Description ( 
+          "The property details NIC's port's BPE support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 BPESupport;
+
+      [Description ( 
+          "The property details NIC's port's open flow support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 OpenFlowSupport;
+
+      [Description ( 
+          "The property details NIC's partition's Wake-On-LAN support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 PartitionWOLSupport;
+
+      [Description ( 
+          "The property details NIC's partition's virtual link control "
+          "support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 VirtualLinkControl;
+
+      [Description ( 
+          "The property details NIC's partition's RX flow control support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 RXFlowControl;
+
+      [Description ( 
+          "The property details NIC's partition's TX flow control support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 TXFlowControl;
+
+      [Description ( 
+          "The property details NIC's partition's open flow support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 TXBandwidthControlMaximum;
+
+      [Description ( 
+          "The property details NIC's partition's open flow support. "), 
+       ValueMap { "0", "2", "3" }, 
+       Values { "Unknown", "Supported", "Not Supported" }]
+   uint8 TXBandwidthControlMinimum;
+
+      [Description ( 
+          "The property details NIC's maximum number of IOs per "
+          "connection supported.")]
+   uint16 FCoEMaxIOsPerSession;
+
+      [Description ( 
+          "The property details NIC's maximum logins per port.")]
+   uint16 FCoEMaxNumberLogins;
+
+      [Description ( 
+          "The property details NIC's maximum number of exchanges.")]
+   uint16 FCoEMaxNumberExchanges;
+
+      [Description ( 
+          "The property details NIC's maximum number of FCoE targets "
+          "supported.")]
+   uint16 FCoEMaxNPIVPerPort;
+
+      [Description ( 
+          "The property details NIC's maximum number of FCoE targets "
+          "supported.")]
+   uint16 FCoEMaxNumberOfFCTargets;
+
+      [Description ( 
+          "The property details NIC's maximum number of outstanding "
+          "commands supported across all connections.")]
+   uint16 FCoEMaxNumberOutStandingCommands;
+
+     [Description (
+	  "This property specifies if the card supports persistence policy"),
+      ValueMap { "0", "2", "3" },
+      Values { "Unknown", "Supported", "Not Supported" } ]
+   uint8 PersistencePolicySupport;
+};

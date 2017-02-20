@@ -1,0 +1,157 @@
+# Copyright (C) 2017 Verizon. All Rights Reserved.
+#
+#     File:    sub_module.jinja2
+#     Author:  John Hickey, Phil Chandler
+#     Date:    2017-02-17
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+"""
+This module was auto-generated based on Dell DCIM Version {{ dell_version }}
+
+The Dell MOF files used to generate this code are licensed under the following license:
+
+Copyright (c) 2012, Dell Inc.
+
+ All rights reserved.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Dell Inc. nor the names of its contributors
+      may be used to endorse or promote products derived from this software
+      without specific prior written permission.
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL DELL INC. BE LIABLE FOR ANY DIRECT,
+ INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ POSSIBILITY OF SUCH DAMAGE.
+"""
+
+from collections import defaultdict
+
+# pylint: disable=no-name-in-module
+from dractor.dcim.base import {{  mof_class.dcim_parents|join(", ") }}
+{% if mof_class.attributes %}
+from dractor.dcim.base import DCIMFactory
+{% endif %}
+
+class {{ mof_class.name }}({{ mof_class.dcim_parents|join(", ") }}):
+    """
+    {{ mof_class.docstring|indent(width=4, indentfirst=False) }}
+    """
+
+{% if mof_class.attributes %}
+    _ATTRIBUTE_METADATA = {{ mof_class.attributes_metadata|pprint|indent(8) }}
+{% endif %}
+
+{% for attribute in mof_class.attributes %}
+    @property
+    def {{ attribute.name }}(self):
+        """
+        {{ attribute.docstring|indent(width=8, indentfirst=False) }}
+        """
+
+        return self._get_dcim_attribute('{{ attribute.name }}')
+
+{% endfor %}
+{% for method in mof_class.methods %}
+    def {{ method.name }}({{ method.arg_str }}):
+        """
+        {{ method.docstring|indent(width=8, indentfirst=False) }}
+
+        Args:
+    {% for input in method.inputs %}
+            {{ input.name }} ({{ input.arg_type }}):
+                    From the Dell MOF description::
+
+                        {{ input.docstring|indent(width=24, indentfirst=False) }}
+                {% if input.mapping_description %}
+
+                    Value Mappings::
+
+                {% for line in input.mapping_description %}
+                    {{ line|indent(width=20, indentfirst=True) }}
+                {% endfor %}
+                {% endif %}
+
+    {% endfor %}
+
+        Returns:
+            dict:
+                A dictionary possibly containing these keys:
+                {% for output in method.outputs %}
+
+                **{{ output.name }}** (*{{ output.arg_type }}*)
+                    From the Dell MOF description::
+
+                        {{ output.docstring|indent(width=28, indentfirst=False) }}
+                    {% if output.mapping_description %}
+
+                    Value Mappings::
+
+                    {% for line in output.mapping_description %}
+                    {{ line|indent(width=24, indentfirst=True) }}
+                    {% endfor %}
+                {% endif %}
+                {% endfor %}
+        """
+
+        # It looks like a bit of a waste to set all these qualifiers here, but it looks better than a
+        # giant class level dictionary
+        parameters = defaultdict(dict)
+        parameters['valuemap'] = {{ method.valuemap }}
+        parameters['qualifiers'] = {{ method.qualifiers }}
+{% for arg in method.inputs %}
+        parameters['input']['{{ arg.name }}'] = {}
+        parameters['input']['{{ arg.name }}']['value'] = {{ arg.name }}
+        parameters['input']['{{ arg.name }}']['qualifiers'] = {{ arg.qualifiers|pprint|indent(width=12) }}
+        parameters['input']['{{ arg.name }}']['valuemap'] = {{ arg.valuemap|pprint|indent(width=12) }}
+{% endfor %}
+{% for arg in method.outputs %}
+        parameters['output']['{{ arg.name }}'] = {}
+        parameters['output']['{{ arg.name }}']['qualifiers'] = {{ arg.qualifiers|pprint|indent(width=12) }}
+        parameters['output']['{{ arg.name }}']['valuemap'] = {{ arg.valuemap|pprint|indent(width=12) }}
+{% endfor %}
+        # Return value for method is returned at 'ReturnValue'
+        parameters['output']['ReturnValue'] = {}
+        parameters['output']['ReturnValue']['qualifiers'] = {{ method.qualifiers }}
+        parameters['output']['ReturnValue']['valuemap'] = {{ method.valuemap }}
+
+        return self._invoke_method("{{ method.name }}", parameters)
+{% endfor %}
+
+{% if mof_class.attributes %}
+
+class {{ mof_class.name }}Factory(DCIMFactory):
+    """ Factory class for enumeration and get """
+
+    _CREATES = {{ mof_class.name }}
+
+{% if mof_class.key %}
+    _KEY = '{{ mof_class.key }}'
+{% endif %}
+{% endif %}

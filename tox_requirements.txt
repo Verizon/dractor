@@ -1,0 +1,5 @@
+# requirements needed by tox+setuptools but not by the installable artifact
+jinja2==2.8
+pylint==1.6.4
+Sphinx==1.5a1
+textx==1.4

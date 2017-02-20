@@ -1,0 +1,242 @@
+// ==================================================================
+//  DCIM_SoftwareInstallationService
+// ==================================================================
+[Description (
+       "A class derived from SoftwareInstallationService "
+       "to represent the Software Installation Services provided." ) ]
+class DCIM_SoftwareInstallationService : CIM_SoftwareInstallationService
+{
+    [Override ("InstallFromURI")]
+    uint32 InstallFromURI
+    (
+        [IN]
+      string URI,
+        [IN]
+      CIM_SoftwareIdentity REF Target,
+        [OUT]
+      string MessageID,
+        [OUT]
+      string Message,
+        [OUT]
+      string MessageArguments[],
+        [OUT]
+      CIM_ConcreteJob REF Job
+    );
+    [Description (
+          "This method is called to Install from a specified repository"),
+       ValueMap {  "2", "4096"},
+       Values   {  "Failed", "Success"}]
+
+     uint32 InstallFromRepository
+    (
+        [IN]
+        string UserName,
+        [IN]
+        string Password,
+        [IN]
+        string ShareName,
+        [IN]
+        uint16 ShareType,
+        [IN]
+        string IPAddress,
+	[IN]
+	string CatalogFile,
+        [IN]
+        uint16 ApplyUpdate,
+        [IN]
+        string Workgroup,
+        [IN]
+        boolean RebootNeeded,
+        [IN]
+        string Mountpoint,
+	[IN]
+	string ProxyServer,
+	[IN]
+	string ProxyUname,
+	[IN]
+	string ProxyPasswd,
+	[IN]
+	uint32 ProxyPort,
+	[IN]
+	uint16 ProxyType,
+	[IN]
+	boolean ProxySupport,
+        [OUT]
+        string MessageID,
+        [OUT]
+        string Message,
+        [OUT]
+        string MessageArguments[],
+        [OUT]
+      CIM_ConcreteJob REF Job
+    );
+   [Description (
+          "This method is called to get the list of packages if ApplyUpdate=FALSE is used in InstallFromRepository method"),
+       ValueMap {  "2", "0"},
+       Values   {  "Failed", "Success"}]
+
+   uint32 GetRepoBasedUpdateList
+    (
+        [OUT]
+        string PackageList ,
+        [OUT]
+        string MessageID,
+        [OUT]
+      string Message,
+        [OUT]
+      string MessageArguments[]
+    );
+
+    [Override ("InstallFromSoftwareIdentity"), Description (
+          "This method is called to Install a new firmware"),
+       ValueMap {  "2", "4096"},
+       Values   {  "Failed", "Success"}]
+    uint32 InstallFromSoftwareIdentity
+    (
+        [IN]
+      CIM_SoftwareIdentity REF Target,
+        [OUT]
+      string MessageID,
+        [OUT]
+      string Message,
+        [OUT]
+      string MessageArguments[],
+        [OUT]
+      CIM_ConcreteJob REF Job
+    );
+
+    [Description (
+          "This method is called to create a reboot job"),
+       ValueMap {  "2", "4096"},
+       Values   {  "Failed", "Success"}]
+    uint32 CreateRebootJob
+    (
+        [IN]
+      uint16 RebootJobType,
+        [OUT]
+      string MessageID,
+        [OUT]
+      string Message,
+        [OUT]
+      string MessageArguments[],
+        [OUT]
+      CIM_ConcreteJob REF RebootJobID
+    );
+
+    [Description (
+          "This method is called to set the Update Schedule"),
+       ValueMap {  "2", "4096"},
+       Values   {  "Failed", "Schedule Created"}]	
+    uint32 SetUpdateSchedule
+    (
+        [IN,Description (
+          "IP address of the NFS or CIFS share such as 192.168.10.12")]
+     string IPAddress,
+        [IN, Description("The domain of the user name for access to the share")]
+     string Domain,
+        [IN,Description("Share name for the network share ")]
+     string ShareName,
+        [IN,Description("Type of the share or storage")]
+     uint16 ShareType,
+        [IN, Description("User name for the remote share")]
+     string UserName,
+        [IN, Description("Password for the remote share")]
+     string Password,
+        [IN,Description("The name of the catalog file if not the default")]
+     string CatalogName,
+        [IN, Description("The ID of the catalog to use")]
+     string CatalogID,
+        [IN,Description("0: Reboot Required,1: No Reboot")]
+     uint16 ApplyReboot,
+        [IN,Description("hh:mm Represents hour and minute of day to run")]
+     string Time,
+        [IN,Description("*,1-31,Default:*")]
+     string DayofMonth,
+        [IN,Description("*,1-4, L,Default:*")]
+     string WeekofMonth,
+        [IN,Description("*,Mon,Tue,Wed,Thu,Fri,Sat,Sun")]
+     string DayofWeek,
+        [IN,Description("The hostname of the proxy server")]
+     string ProxyHostName,
+        [IN,Description("The user name for access to the proxy server")]
+     string ProxyUserName,
+        [IN,Description("The password for access to the proxy server, ")]
+     string ProxyPassword,
+        [IN,Description("This is a free format text field, 1024 bytes or less, forthe user to use if desired")]
+     string Comment,
+        [IN,Description("The URI to the she repository catalog file")]
+     string URI,
+        [IN,Description("1-366")]
+     uint16 Repeat,
+        [OUT,Description("Error Message ID")]
+     string MessageID,
+        [OUT, Description("Error Message in English corresponding to MessageID ")]
+     string Message,
+        [OUT,Description("Substitution variables for dynamic error messages")]
+     string MessageArguments[]
+    );
+
+   [Description (
+          "This method is called to Get the Update Schedule"),
+       ValueMap {  "2", "4096"},
+       Values   {  "Failed", "Success"}]
+   uint32 GetUpdateSchedule
+   (
+    
+        [OUT,Description("IP address of the NFS or CIFS share")]
+     string IPAddress,
+        [OUT,Description("Share name for the network share ")]
+     string ShareName,
+        [OUT,Description("Type of the share or storage")]
+     string ShareType,
+        [OUT,Description("User name for the remote share")]
+     string Username,
+        [OUT,Description("0: Reboot Required,1: No Reboot")]
+     string ApplyReboot,
+	[OUT,Description("The name of the catalog file if not the default")]	
+     string CatalogName,
+        [OUT, Description("The ID of the catalog to use")]
+     string CatalogID,
+        [OUT,Description("The hostname of the proxy server")]
+     string ProxyHostName,
+        [OUT,Description("The user name for access to the proxy server")]
+     string ProxyUserName,
+     	[OUT, Description("The domain of the user name for access ")]
+     string Domain, 
+        [OUT,Description("Represents hour and minute of day to run")]
+     string Time,
+        [OUT,Description("*,1-31")]
+     string DayofMonth,
+        [OUT,Description("*,1-4, L")]
+     string WeekofMonth,
+        [OUT,Description("*,Mon,Tue,Wed,Thu,Fri,Sat,Sun")]
+     string DayofWeek,
+        [OUT,Description("1-366")]
+     string Repeat,
+	[OUT,Description("Job Type, Auto_Update")]
+     string JobType,	
+        [OUT,Description("Error Message ID")]
+     string MessageID,
+        [OUT,Description("Error Message in English corresponding to MessageID ")]
+     string Message,
+        [OUT,Description("Substitution variables for dynamic error messages")]
+     string MessageArguments[]
+
+   );
+
+   [Description (
+          "This method is called to clear the Update Schedule"),
+       ValueMap {  "2", "4096"},
+       Values   {  "Failed", "Success"}]
+   uint32 ClearUpdateSchedule
+   (
+    
+       [OUT,Description("Error Message ID")]
+     string MessageID,
+        [OUT,Description("Error Message in English corresponding to MessageID")]
+     string Message,
+        [OUT,Description("Substitution variables for dynamic error messages")]
+     string MessageArguments[]
+   ); 
+    
+};

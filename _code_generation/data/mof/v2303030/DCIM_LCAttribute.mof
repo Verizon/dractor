@@ -1,0 +1,10 @@
+// Copyright (c) 2009 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_LCAttribute
+// ==================================================================
+  [Version ( "1.0.0" ), Description(
+       "DCIM_LCAttribute is a trivial derivation of "
+       "CIM_BIOSAttribute.")]
+class DCIM_LCAttribute : CIM_BIOSAttribute
+{
+};

@@ -1,0 +1,37 @@
+// Copyright (c) 2011 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_NICAttribute
+// ==================================================================
+  [Description(
+       "DCIM_NICAttribute is a derivation of "
+       "CIM_BIOSAttribute.")]
+class DCIM_NICAttribute : CIM_BIOSAttribute
+{
+      [Description (
+          "A string containing the Fully Qualified Device Description"
+          "A user-friendly name for the object. This property allows each "
+          "instance to define a user-friendly name in addition to its key "
+          "properties, identity data, and description information.")]
+   string FQDD;
+      [Description (
+          "A string containing the display name for the grouping of the "
+          "attributes that the attribute belongs to.\n "
+          "This is a user-friendly name for the group that can be readily "
+          "displayed on user interfaces. ")]
+   string GroupDisplayName;
+      [Description (
+          "A string containing the ID for the grouping of the attributes "
+          "that the attribute belongs to.\n ")]
+   string GroupID;
+      [Description (
+          "A string containing the attribute display name.\n "
+          "This is a user-friendly name for the attribute that can be "
+          "readily displayed on user interfaces. ")]
+   string AttributeDisplayName;
+      [Description (
+          "A string containing the dependency information for the "
+          "attribute.")]
+   string Dependency;
+};
+
+

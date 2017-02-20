@@ -1,0 +1,62 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_LifecycleJob
+// ==================================================================
+  [Version ( "1.0.0" ), Description(
+       "DCIM_LifecycleJob is a derivation of CIM_ConcreteJob" )]
+class  DCIM_LifecycleJob  : CIM_ConcreteJob
+{ 
+      [Description ( 
+          "A free-form string that represents the error id of the "
+          "job. The primary status is reflected in the inherited "
+          "additional, implementation-specific details." ), 
+       ModelCorrespondence { 
+          "CIM_ManagedSystemElement.OperationalStatus" }]
+    string MessageID;
+
+      [Description ( 
+          "A free-form string that represents the error of the "
+          "of the job, implementation-specific details." ), 
+       ModelCorrespondence { 
+          "CIM_ManagedSystemElement.OperationalStatus" }]
+    string Message;
+
+      [Description ( 
+          "A free-form string that represents the MessageArguments of the "
+          "job. The primary status is reflected in the inherited "
+          "additional, implementation-specific details." ), 
+       ModelCorrespondence { 
+          "CIM_ManagedSystemElement.OperationalStatus" }]
+    string MessageArguments;
+
+      [Description (
+          "A free-form string that represents the start time of the job"
+          "additional, implementation-specific details." ),
+       ModelCorrespondence {
+          "CIM_ManagedSystemElement.OperationalStatus" }]
+    string JobStartTime;
+    
+      [Description (
+          "A free-form string that represents until time of the job "
+          "additional, implementation-specific details." ),
+       ModelCorrespondence {
+          "CIM_ManagedSystemElement.OperationalStatus" }]
+    string JobUntilTime;
+    
+    [Override( "PercentComplete" ), 
+	 Description (
+          "A free-form string that represents percentage complete of the job "
+          "additional, implementation-specific details." ),
+       ModelCorrespondence {
+          "CIM_ManagedSystemElement.OperationalStatus" }]
+    string PercentComplete;
+    
+    [Description (
+          "A free-form string that represents time elapsed since"
+          "completion of the job "),
+       ModelCorrespondence {
+          "CIM_ManagedSystemElement.OperationalStatus" }]
+    string ElapsedTimeSinceCompletion;
+
+};
+

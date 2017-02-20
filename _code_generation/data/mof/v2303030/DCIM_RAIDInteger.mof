@@ -1,0 +1,22 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_RAIDInteger
+// ==================================================================
+  [Description(
+       "The DCIM_RAIDInteger object may be used to instantiate "
+       "integer-based RAID attributes.")]
+class DCIM_RAIDInteger : DCIM_RAIDAttribute {
+
+      [Description (
+          "The property defines a lower bound or limit when "
+          "modifying this attribute." ),
+       ModelCorrespondence { "CIM_BIOSInteger.UpperBound" }]
+   sint64 LowerBound;
+
+      [Description (
+          "The property defines an upper bound or limit when "
+          "modifying this attribute." ),
+       ModelCorrespondence { "CIM_BIOSInteger.LowerBound" }]
+   uint64 UpperBound;
+};
+

@@ -1,0 +1,31 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_NICString
+// ==================================================================
+  [Description(
+       "The DCIM_NICString object may be used to instantiate "
+       "string-based NIC attributes.")]
+class DCIM_NICString : DCIM_NICAttribute {
+      [Description ( 
+          "This property specifies the minimum string length "
+          "allowed when modifying this BIOS attribute. A value of "
+          "NULL SHALL be defined as zero." ), 
+       ModelCorrespondence { "DCIM_NICString.MinLength" }]
+   uint64 MinLength;
+
+      [Description ( 
+          "This property specifies the maximum string length "
+          "allowed when modifying this BIOS attribute. A value of "
+          "NULL defines the maximum length is unknown. A value of 0 "
+          "defines the maximum length as 18446744073709551615, the "
+          "limitation of the property definition as uint64." ), 
+       ModelCorrespondence { "DCIM_NICString.MaxLength" }]
+   uint64 MaxLength;
+   
+      [Description ( 
+          "The property denotes a Perl-compatible regular "
+          "expression (PCRE) syntax to use in validating Attribute "
+          "values." )]
+   string ValueExpression;
+};
+

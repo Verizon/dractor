@@ -1,0 +1,30 @@
+// ==================================================================
+//  DCIM_SELLogEntry
+// ==================================================================
+[Description (
+       "A class derived from LogEntry "        
+       "to the entries in the System Event Log." ) ]
+class DCIM_SELLogEntry : CIM_LogEntry
+{
+	[Description (
+          "ID of the source Agent responsible for "
+          "the log entry event ")]
+   string AgentID;
+   
+   [Description (
+          "Category of the log entry event ")]
+   string Category;
+   
+   [Description (
+          "A string containing the Fully Qualified Device Description "
+          "A user-friendly name for the object. This property allows each "
+          " instance to define a user-friendly name in addition to its key "
+          " properties, identity data, and description information." )]
+   string FQDD;
+   
+   [Description (
+          "A string that captures user comment, to place notes and to dos "
+          "on individual events." )]
+   string Comment;
+};
+

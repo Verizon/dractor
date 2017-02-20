@@ -1,0 +1,657 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_OSDeploymentService
+// ==================================================================
+  [Version ( "1.0.0" ), Description(
+       "DCIM_OSDeploymentService is a Dell extension of CIM_Service.")]
+class DCIM_OSDeploymentService : CIM_Service {
+      [Description ( "GetDriverPackInfo. " ), 
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 GetDriverPackInfo(
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Version,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string OSList[],
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "UnpackAndAttach. " ), 
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 UnpackAndAttach(
+         [IN, Description ( 
+             "Description goes here" )]
+      string OSName, 
+         [IN, Description ( 
+             "Description goes here" )]
+      datetime ExposeDuration,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "DetachDrivers. " ), 
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 DetachDrivers(
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "DetachISOImage. " ), 
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 DetachISOImage(
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "DownloadISOImage. " ), 
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 DownloadISOImage(
+         [IN, Description ( 
+             "Description goes here" )]
+      string IPAddress,
+         [IN, Description ( 
+             "Description goes here" )]
+      string ShareName,
+         [IN, Description ( 
+             "Description goes here" )]
+      string ImageName,
+         [IN, Description ( 
+             "Description goes here" )]
+      uint16 ShareType,
+         [IN, Description ( 
+             "Description goes here" )]
+      string Username,
+         [IN, Description ( 
+             "Description goes here" )]
+      string Password,
+         [IN, Description ( 
+             "Description goes here" )]
+      string Workgroup,
+         [IN, Description ( 
+             "Description goes here" )]
+      uint16 Port,
+         [IN, Description ( 
+             "Description goes here" )]
+      uint16 HashType,
+         [IN, Description ( 
+             "Description goes here" )]
+      string HashValue,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "BootToISO. " ), 
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 BootToISO(
+         [IN, Description (
+             "Description goes here" )]
+      datetime ExposeDuration,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "BootToPXE. " ), 
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 BootToPXE(
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "UnpackAndShare." ),
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 UnpackAndShare(
+         [IN, Description (
+             "Description goes here" )]
+      string OSName,
+         [IN, Description (
+             "Description goes here" )]
+      string IPAddress,
+         [IN, Description (
+             "Description goes here" )]
+      string ShareName,
+         [IN, Description (
+             "Description goes here" )]
+      uint16 ShareType,
+         [IN, Description (
+             "Description goes here" )]
+      string Username,
+         [IN, Description (
+             "Description goes here" )]
+      string Password,
+         [IN, Description (
+             "Description goes here" )]
+      string Workgroup,
+         [IN, Description (
+             "Description goes here" )]
+      string FolderName,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "BootToNetworkISO. " ),
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 BootToNetworkISO(
+         [IN, Description (
+             "Description goes here" )]
+      string IPAddress,
+         [IN, Description (
+             "Description goes here" )]
+      string ShareName,
+         [IN, Description (
+             "Description goes here" )]
+      string ImageName,
+         [IN, Description (
+             "Description goes here" )]
+      uint16 ShareType,
+         [IN, Description (
+             "Description goes here" )]
+      string Username,
+         [IN, Description (
+             "Description goes here" )]
+      string Password,
+         [IN, Description (
+             "Description goes here" )]
+      string Workgroup,
+         [IN, Description ( 
+             "Description goes here" )]
+      uint16 HashType,
+         [IN, Description ( 
+             "Description goes here" )]
+      string HashValue,
+         [IN, Description (
+             "Description goes here" )]
+      datetime ExposeDuration,
+         [IN, Description (
+             "Description goes here" )]
+      string FolderName,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "ConfigurableBootToNetworkISO. " ),
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 ConfigurableBootToNetworkISO(
+         [IN, Description (
+             "Description goes here" )]
+      string IPAddress,
+         [IN, Description (
+             "Description goes here" )]
+      string ShareName,
+         [IN, Description (
+             "Description goes here" )]
+      string ImageName,
+         [IN, Description (
+             "Description goes here" )]
+      uint16 ShareType,
+         [IN, Description (
+             "Description goes here" )]
+      string Username,
+         [IN, Description (
+             "Description goes here" )]
+      string Password,
+         [IN, Description (
+             "Description goes here" )]
+      string Workgroup,
+         [IN, Description ( 
+             "Description goes here" )]
+      uint16 HashType,
+         [IN, Description ( 
+             "Description goes here" )]
+      string HashValue,
+         [IN, Description (
+             "Description goes here" )]
+      datetime ExposeDuration,
+         [IN, Description ( 
+             "Description goes here" )]
+      uint16 ResetType,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "GetHostMACInfo. " ),
+       ValueMap { "0",       "1",             "2",      "4096"},
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 GetHostMACInfo(
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MACList[],
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "DownloadISOToVFlash. " ),
+       ValueMap { "0",       "1",             "2",      "4096"},
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 DownloadISOToVFlash(
+         [IN, Description (
+             "Description goes here" )]
+      string IPAddress,
+         [IN, Description (
+             "Description goes here" )]
+      string ShareName,
+         [IN, Description (
+             "Description goes here" )]
+      string ImageName,
+         [IN, Description (
+             "Description goes here" )]
+      uint16 ShareType,
+         [IN, Description (
+             "Description goes here" )]
+      string Username,
+         [IN, Description (
+             "Description goes here" )]
+      string Password,
+         [IN, Description (
+             "Description goes here" )]
+      string Workgroup,
+         [IN, Description (
+             "Description goes here" )]
+      uint16 Port,
+         [IN, Description (
+             "Description goes here" )]
+      uint16 HashType,
+         [IN, Description (
+             "Description goes here" )]
+      string HashValue,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "BootToISOFromVFlash. " ),
+       ValueMap { "0",       "1",             "2",      "4096"},
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 BootToISOFromVFlash(
+         [IN, Description (
+             "Description goes here" )]
+      datetime ExposeDuration,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "DetachISOFromVFlash. " ),
+       ValueMap { "0",       "1",             "2"},
+       Values   { "Success", "Not Supported", "Failed"}]
+   uint32 DetachISOFromVFlash(
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "DeleteISOFromVFlash. " ),
+       ValueMap { "0",       "1",             "2"},
+       Values   { "Success", "Not Supported", "Failed"}]
+   uint32 DeleteISOFromVFlash(
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description (
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "ConnectNetworkISOImage. " ),
+       ValueMap { "0",       "1",             "2"},
+       Values   { "Success", "Not Supported", "Failed"}]
+   uint32 ConnectNetworkISOImage(
+         [IN, Description (
+             "IP address of the server that hosts the ISO Image" )]
+      string IPAddress,
+         [IN, Description (
+             "Share name of the server that hosts the ISO Image" )]
+      string ShareName,
+         [IN, Description (
+             "ISO Image name on the server" )]
+      string ImageName,
+         [IN, Description (
+             "Type of the share" ),
+             ValueMap { "0",   "2"}, 
+             Values   { "NFS", "CIFS" }]
+      uint16 ShareType,
+         [IN, Description (
+             "Username of the account to access the share" )]
+      string Username,
+         [IN, Description (
+             "Password of the account to access the share" )]
+      string Password,
+         [IN, Description (
+             "Workgroup of the account to access the share" )]
+      string Workgroup,
+         [IN, Description ( 
+             "Type of Hash algorithm used to compute checksum" ),
+             ValueMap { "1",   "2"}, 
+             Values   { "MD5", "SHA1" }]
+      uint16 HashType,
+         [IN, Description (
+             "Checksum value in string format computed using HashType algorithm" )]
+      string HashValue,
+         [IN ( false ), OUT, Description ( 
+             "Reference to a CIM_ConcreteJob" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description ( 
+             "Error message ID part of the OSD message registry" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description of error message in english part of the OSD message registry" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Substitution variables for the dynamic error messages" )]
+      string MessageArguments[]);
+
+      [Description ( "DisconnectNetworkISOImage. This method will disconnect and detach the ISO Image from the host server." ), 
+       ValueMap { "0",       "1",             "2"}, 
+       Values   { "Success", "Not Supported", "Failed"}]
+   uint32 DisconnectNetworkISOImage(
+         [IN ( false ), OUT, Description ( 
+             "Error message ID part of the OSD message registry" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description of error message in english part of the OSD message registry" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Substitution variables for the dynamic error messages" )]
+      string MessageArguments[]);
+
+      [Description ( "GetNetworkISOImageConnectionInfo. This method will give the status of the ISO Image that has been exposed to host." ), 
+       ValueMap { "0",       "1",             "2"}, 
+       Values   { "Success", "Not Supported", "Failed"}]
+   uint32 GetNetworkISOImageConnectionInfo(
+         [IN ( false ), OUT, Description (
+           "IP Address as specified in the ConnectNetworkISOImage method")]
+      string IPAddr,
+         [IN ( false ), OUT, Description (
+           "Share Name as specified in the ConnectNetworkISOImage method")]
+      string ShareName,
+         [IN ( false ), OUT, Description (
+           "ISO Image Name as specified in the ConnectNetworkISOImage method")]
+      string ImageName,
+         [IN ( false ), OUT, Description (
+           "User Name as specified in the ConnectNetworkISOImage method")]
+      string UserName,
+         [IN ( false ), OUT, Description (
+           "Workgroup as specified in the ConnectNetworkISOImage method")]
+      string Workgroup,
+         [IN ( false ), OUT, Description ( 
+             "Describes the session status" ),
+             ValueMap { "0",   "1"}, 
+             Values   { "Connection down", "Connection up" }]
+      uint8 ISOConnectionStatus,
+         [IN ( false ), OUT, Description ( 
+             "Describes ISO attached status" ),
+             ValueMap { "0",   "1"}, 
+             Values   { "Not Attached", "Attached" }]
+      uint8 HostAttachedStatus,
+         [IN ( false ), OUT, Description ( 
+             "Describes ISO boot status. If the ISO has been booted atleast once or not."),
+             ValueMap { "0",   "1"}, 
+             Values   { "No", "Yes" }]
+      uint8 HostBootedFromISO,
+         [IN ( false ), OUT, Description ( 
+             "Error message ID part of the OSD message registry" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description of error message in english part of the OSD message registry" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Substitution variables for the dynamic error messages" )]
+      string MessageArguments[]);
+ 
+      [Description ( "SkipISOImageBoot. This method will allow BIOS to boot to the first device in boot list." ), 
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 SkipISOImageBoot(
+         [IN ( false ), OUT, Description ( 
+             "Error message ID part of the OSD message registry" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description of error message in english part of the OSD message registry" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Substitution variables for the dynamic error messages" )]
+      string MessageArguments[]);
+
+      [Description ( "ConnectRFSISOImage. This method will connect the ISO and attach it to the host server as usb cdrom device via RFS end point." ), 
+       ValueMap { "0",       "1",             "2",      "4096"},
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 ConnectRFSISOImage(
+         [IN, Description (
+             "IP address of the server that hosts the ISO Image" )]
+      string IPAddress,
+         [IN, Description (
+             "Share name of the server that hosts the ISO Image" )]
+      string ShareName,
+         [IN, Description (
+             "ISO Image name on the server" )]
+      string ImageName,
+         [IN, Description (
+             "Type of the share" ),
+             ValueMap { "0",   "2"}, 
+             Values   { "NFS", "CIFS" }]
+      uint16 ShareType,
+         [IN, Description (
+             "Username of the account to access the share" )]
+      string Username,
+         [IN, Description (
+             "Password of the account to access the share" )]
+      string Password,
+         [IN, Description (
+             "Workgroup of the account to access the share" )]
+      string Workgroup,
+         [IN, Description ( 
+             "Type of Hash algorithm used to compute checksum" ),
+             ValueMap { "1",   "2"}, 
+             Values   { "MD5", "SHA1" }]
+      uint16 HashType,
+         [IN, Description (
+             "Checksum value in string format computed using HashType algorithm" )]
+      string HashValue,
+         [IN ( false ), OUT, Description ( 
+             "Reference to a CIM_ConcreteJob" )]
+      CIM_ConcreteJob REF Job,
+         [IN ( false ), OUT, Description ( 
+             "Error message ID part of the OSD message registry" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description of error message in english part of the OSD message registry" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Substitution variables for the dynamic error messages" )]
+      string MessageArguments[]);
+
+      [Description ( "DisconnectRFSISOImage. This method will disconnect and detach the ISO Image from the host server." ), 
+       ValueMap { "0",       "1",             "2"}, 
+       Values   { "Success", "Not Supported", "Failed"}]
+   uint32 DisconnectRFSISOImage(
+         [IN ( false ), OUT, Description ( 
+             "Error message ID part of the OSD message registry" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description of error message in english part of the OSD message registry" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Substitution variables for the dynamic error messages" )]
+      string MessageArguments[]);
+
+      [Description ( "GetRFSISOImageConnectionInfo. This method will give the status of the ISO Image that has been exposed to host." ), 
+       ValueMap { "0",       "1",             "2"}, 
+       Values   { "Success", "Not Supported", "Failed"}]
+   uint32 GetRFSISOImageConnectionInfo(
+         [IN ( false ), OUT, Description (
+           "File Path of ISO Image in the form of URI that includes ip addr, share name and Image name")]
+      string FilePath,
+         [IN ( false ), OUT, Description (
+           "User Name as specified in the ConnectNetworkISOImage method")]
+      string UserName,
+         [IN ( false ), OUT, Description ( 
+             "Error message ID part of the OSD message registry" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description of error message in english part of the OSD message registry" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Substitution variables for the dynamic error messages" )]
+      string MessageArguments[]);
+
+      [Description ( "BootToHD. " ), 
+       ValueMap {"0",       "1",             "2"}, 
+       Values   {"Success", "Not Supported", "Failed"}]
+   uint32 BootToHD(
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+
+      [Description ( "GetAttachStatus. " ), 
+       ValueMap { "0",       "1",             "2",      "4096"}, 
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 GetAttachStatus(
+         [IN ( false ), OUT, Description (
+           "Description goes here"),
+          ValueMap { "0", "1"},
+          Values   { "Not Attached", "Attached" }]
+      uint8 DriversAttachStatus,
+         [IN ( false ), OUT, Description (
+           "Description goes here"),
+          ValueMap { "0", "1"},
+          Values   { "Not Attached", "Attached" }]
+      uint8 ISOAttachStatus,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageID,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string Message,
+         [IN ( false ), OUT, Description ( 
+             "Description goes here" )]
+      string MessageArguments[]);
+};
+
+

@@ -1,0 +1,18 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_RAIDAttribute
+// ==================================================================
+  [Description(
+       "DCIM_RAIDAttribute is a derivation of "
+       "CIM_BIOSAttribute.")]
+class DCIM_RAIDAttribute : CIM_BIOSAttribute
+{
+      [Description (
+        "A string containing the Fully Qualified Device Description "
+        "A user-friendly name for the object. This property allows each "
+        "instance to define a user-friendly name in addition to its key "
+        "properties, identity data, and description information." )]
+   string  FQDD;
+};
+
+

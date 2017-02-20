@@ -1,0 +1,43 @@
+// ==================================================================
+//  DCIM_LCLogEntry
+// ==================================================================
+[Description (
+       "A class derived from LogEntry "        
+       "to the entries in the LifeCycle Log." ) ]
+class DCIM_LCLogEntry : CIM_LogEntry
+{
+	[Description (
+          "ID of the source Agent responsible for "
+          "the log entry event ")]
+   string AgentID;
+   
+   [Description (
+          "Category of the log entry event ")]
+   string Category;
+   
+   [Description (
+          "A string containing the Fully Qualified Device Description "
+          "A user-friendly name for the object. This property allows each "
+          " instance to define a user-friendly name in addition to its key "
+          " properties, identity data, and description information." )]
+   string FQDD;
+   
+   [Description (
+          "A string that captures user comment, to place notes and to dos "
+          "on individual events." )]
+   string Comment;
+   
+   [Description (
+          "A boolean that indicates if the Configuration Results are "
+          "available (TRUE), or not (FALSE) for the log entry." )]
+   boolean ConfigResultsAvailable;
+   
+   [Description (
+          "A string that provides the raw event data." )]
+   string RawEventData;
+   
+   [Description (
+          "An integer that provides the sequence number of the log entry." )]
+   uint32 SequenceNumber;
+};
+

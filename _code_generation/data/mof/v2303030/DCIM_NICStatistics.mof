@@ -1,0 +1,250 @@
+// Copyright (c) 2011 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_NICStatistics
+// ==================================================================
+  [Description(
+       "The DCIM_NICStatistics represents the statistics of the NIC, "
+       "NIC port or partition.")]
+class DCIM_NICStatistics : CIM_StatisticalData {      
+      
+      [Key, Override ( "InstanceID" )]
+string	InstanceID;
+      
+      [Description (
+          "A string containing the Fully Qualified Device Description"
+          "A user-friendly name for the object. This property allows each "
+          "instance to define a user-friendly name in addition to its key "
+          "properties, identity data, and description information.")]
+string FQDD;
+
+      [Description (
+          "Counts the total number of bytes received, including host and "
+          "remote management pass through traffic (remote management pass "
+          "through traffic is applicable to LOMs only)."), 
+          PUnit ( "count" )]
+uint64 RxBytes;
+
+      [Description (
+          "Counts the total number of bytes transmitted, including host "
+          "and remote management pass through traffic (remote management "
+          "pass through traffic is applicable to LOMs only)."), 
+          PUnit ( "count" )]
+uint64 TxBytes;
+
+      [Description (
+          "Counts the total number of good unicast packets transmitted."), 
+          PUnit ( "count" )]
+uint64 RxUnicast;
+
+      [Description (
+          "Counts the total number of good multicast packets transmitted."), 
+          PUnit ( "count" )]
+uint64 RxMutlicast;
+
+      [Description (
+          "Counts the total number of good broadcast packets received."), 
+          PUnit ( "count" )]
+uint64 RxBroadcast;
+
+      [Description (
+          " Counts the total number of good unicast packets transmitted."), 
+          PUnit ( "count" )]
+uint64 TxUnicast;
+
+      [Description (
+          "Counts the total number of good multicast packets transmitted."), 
+          PUnit ( "count" )]
+uint64 TxMutlicast;
+
+      [Description (
+          "Counts the total number of good broadcast packets transmitted."), 
+          PUnit ( "count" )]
+uint64 TxBroadcast;
+
+      [Description (
+          "Counts the total number of packets received with FCS errors."), 
+          PUnit ( "count" )]
+uint32 RxErrorPktFCSErrors;
+
+      [Description (
+          "Counts the total number of packets received with alignment "
+          "errors.")]
+uint32 RxErrorPktAlignmentErrors;
+
+      [Description (
+          "Counts the total number of false carrier errors received from PHY."), 
+          PUnit ( "count" )]
+uint32 RxFalseCarrierDetection;
+
+      [Description (
+          "Counts the total number of frames that are too short (< 64 bytes)."), 
+          PUnit ( "count" )]
+uint32 RxRuntPkt;
+
+      [Description (
+          "Counts the total number of frames that are too long."), 
+          PUnit ( "count" )]
+uint32 RxJabberPkt;
+
+      [Description (
+          "Counts the flow control frames from the network to resume "
+          "transmission."), 
+          PUnit ( "count" )]
+uint32 RxPauseXONFrames;
+
+      [Description (
+          "Counts the flow control frames from the network to pause "
+          "transmission."), 
+          PUnit ( "count" )]
+uint32 RxPauseXOFFFrames;
+
+      [Description (
+          "Counts the total number of discarded packets."), 
+          PUnit ( "count" )]
+uint32 DiscardedPkts;
+
+      [Description (
+          "Counts the number of XON packets transmitted to the network."), 
+          PUnit ( "count" )]
+uint32 TxPauseXONFrames;
+
+      [Description (
+          "Counts the number of XOFF packets transmitted to the network."), 
+          PUnit ( "count" )]
+uint32 TxPauseXOFFFrames;
+
+      [Description (
+          "Counts the number of times that a successfully transmitted "
+          "packet encountered a single collision."), 
+          PUnit ( "count" )]
+uint32 TxErrorPktSingleCollision;
+
+      [Description (
+          "Counts the number of times that a transmitted packet encountered "
+          "more than one collision but fewer than 16."), 
+          PUnit ( "count" )]
+uint32 TxErrorPktMultipleCollision;
+
+      [Description (
+          "Counts the number of collisions that occurred after one slot time "
+          "(defined by IEEE 802.3)."), 
+          PUnit ( "count" )]
+uint32 TxErrorPktLateCollision;
+
+      [Description (
+          "Counts the number of times that 16 or more collisions occurred on "
+          "a single transmit packet."), 
+          PUnit ( "count" )]
+uint32 TxErrorPktExcessiveCollision;
+
+ 		[Description (
+          "Counts the total number of RDMA packets recieved "),
+          PUnit ( "count" )]
+uint64 RDMARxTotalPackets;
+
+		[Description (
+          "Counts the total number of RDMA bytes recieved "),
+          PUnit ( "count" )]
+uint64 RDMARxTotalBytes;
+
+		[Description (
+          "Counts the total number of RDMA packets transmitted  "),
+          PUnit ( "count" )]
+uint64 RDMATxTotalPackets;
+
+		[Description (
+          "Counts the total number of RDMA bytes transmitted "),
+          PUnit ( "count" )]
+uint64 RDMATxTotalBytes;
+
+		[Description (
+          "Counts the total number of RDMA ReadRequest packets transmitted "),
+          PUnit ( "count" )]
+uint64 RDMATxTotalReadReqPkts;
+
+		[Description (
+          "Counts the total number of RDMA Send packets transmitted "),
+          PUnit ( "count" )]
+uint64 RDMATxTotalSendPkts;
+
+		[Description (
+          "Counts the total number of RDMA Write packets transmitted "),
+          PUnit ( "count" )]
+uint64 RDMATxTotalWritePkts;
+
+		[Description (
+          "Counts the total number of RDMA protocol errors"),
+          PUnit ( "count" )]
+uint32 RDMATotalProtocolErrors;
+
+		[Description (
+          "Counts the total number of RDMA Protection errors"),
+          PUnit ( "count" )]
+uint32 RDMATotalProtectionErrors;
+
+      [Description (
+          "Indicates whether the link is up or down."), 
+       ValueMap { "0", "1", "3" }, 
+       Values { "Unknown", "Up", "Down"}]
+uint8 LinkStatus;
+
+      [Description (
+          "Indicates OS driver states."), 
+       ValueMap { "0", "1", "3" }, 
+       Values { "Unknown", "Operational", "Non-operational"}]
+uint8 OSDriverState;
+
+      [Description (
+          "Indicates whether the partition link is up or down."), 
+       ValueMap { "0", "1", "3" }, 
+       Values { "Unknown", "Up", "Down"}]
+uint8 PartitionLinkStatus;
+
+      [Description (
+          "Indicates partitions OS driver states."), 
+       ValueMap { "0", "1", "3" }, 
+       Values { "Unknown", "Operational", "Non-operational"}]
+uint8 PartitionOSDriverState;
+
+      [Description (
+          "Counts the number of FC frames with CRC errors."), 
+          PUnit ( "count" )]
+uint32 FCCRCErrorCount;
+
+      [Description (
+          "Counts the number of receive packets with FCS errors."), 
+          PUnit ( "count" )]
+uint32 FCOERxPktDroppedCount;
+
+      [Description (
+          "Counts the number of good (FCS valid) packets received with the "
+          "partition's active FCoE MAC address."), 
+          PUnit ( "count" )]
+uint64 FCOEPktRxCount;
+
+      [Description (
+          "Counts the number of good (FCS valid) packets transmitted that "
+          "passed L2 filtering by a specific MAC address."), 
+          PUnit ( "count" )]
+uint64 FCOEPktTxCount;
+
+      [Description (
+          "Counts the number of FCoE/FIP Login failures."), 
+          PUnit ( "count" )]
+uint32 FCOELinkFailures;
+
+      [Override ( "StartStatisticTime" ), Description ( 
+          "The time when the first NIC statistic measurements were "
+          "taken." )]
+   datetime StartStatisticTime;
+
+      [Override ( "StatisticTime" ), Description ( 
+          "The time the most recent NIC statistic measurements were taken." )]
+   datetime StatisticTime;
+
+uint64 LanUnicastPktRXCount;
+
+uint64 LanUnicastPktTXCount;
+
+uint32  LanFCSRxErrors;
+};

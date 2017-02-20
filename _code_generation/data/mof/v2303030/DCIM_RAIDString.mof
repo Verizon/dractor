@@ -1,0 +1,24 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_RAIDString
+// ==================================================================
+  [Description(
+       "The DCIM_RAIDString object may be used to instantiate "
+       "string-based RAID attributes.")]
+class DCIM_RAIDString : DCIM_RAIDAttribute {
+      [Description ( 
+          "This property specifies the minimum string length "
+          "allowed when modifying this RAID attribute. A value of "
+          "NULL SHALL be defined as zero." ), 
+       ModelCorrespondence { "DCIM_RAIDString.MaxLength" }]
+   uint64 MinLength;
+
+      [Description ( 
+          "This property specifies the maximum string length "
+          "allowed when modifying this RAID attribute. A value of "
+          "NULL defines the maximum length is unknown. A value of 0 "
+          "defines the maximum length as 18446744073709551615, the "
+          "limitation of the property definition as uint64." ), 
+       ModelCorrespondence { "DCIM_RAIDString.MinLength" }]
+   uint64 MaxLength;
+};

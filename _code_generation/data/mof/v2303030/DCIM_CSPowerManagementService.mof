@@ -1,0 +1,66 @@
+[ Description ("A class derived from Service that describes power "
+    "management functionality, hosted on a System." )
+]
+
+class DCIM_CSPowerManagementService : CIM_PowerManagementService
+{
+
+[ Override ("RequestPowerStateChange"), Description ("SetPowerState defines the desired power state of "
+  "the managed element and when "
+  "the element should be put into that state.") ]
+
+uint32 RequestPowerStateChange (
+         [IN, Description ( "The power state for ManagedElement." ),
+          ValueMap { "2", "3", "4", "5", "6", "7", "8", "9",
+             "10", "11" },
+          Values { "Power On", "Sleep - Light", "Sleep - Deep",
+             "Power Cycle (Off Soft)", "Power Off - Hard",
+             "Hibernate", "Power Off - Soft",
+             "Power Cycle (Off Hard)", "Master Bus Reset",
+             "Diagnostic Interrupt (NMI)" }]
+      uint16 PowerState,
+         [IN, Description (
+             "ManagedElement indicates the element whose state is set."
+              )]
+      CIM_ManagedElement REF ManagedElement,
+         [IN, Description (
+             "Time indicates when the power state should be set, "
+             "either as a regular date-time value or as an "
+             "interval value (where the interval begins when the "
+             "method invocation is received." )]
+      datetime Time,
+         [IN ( false ), OUT, Description (
+             "Reference to the job (can be null if the task is completed)."
+              )]
+      CIM_ConcreteJob REF Job,
+         [IN, Description (
+             "A timeout period that specifies the maximum amount "
+             "of time that the client expects the transition to "
+             "the new state to take. The interval format must be "
+             "used to specify the TimeoutPeriod. A value of 0 or "
+             "a null parameter indicates that the client has no "
+             "time requirements for the transition. \n"
+             "If this property does not contain 0 or null and "
+             "the implementation does not support this "
+             "parameter, a return code of \'Use Of Timeout "
+             "Parameter Not Supported\' must be returned." )]
+      datetime TimeoutPeriod,
+
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+        string MessageID,
+
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+        string Message,
+
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+        string MessageArguments[]
+);
+
+
+};
+

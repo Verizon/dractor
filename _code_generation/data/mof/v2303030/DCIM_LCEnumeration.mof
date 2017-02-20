@@ -1,0 +1,25 @@
+// Copyright (c) 2009 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_LCEnumeration
+// ==================================================================
+   [Version ( "1.0.0" ), Description ( 
+       "This class extends the DCIM_LCAttribute base class definition "
+       "to provide informational detail for enumeration data types. "
+       "Enumerations are single-selection lists with a finite set of "
+       "entities. Example enumerations might include \"Power-On Self "
+       "Test: Enable, Disable\" or \"Standby Timeout: 15 minutes, 30 "
+       "minutes, 45 minutes, Never\"." )]
+class DCIM_LCEnumeration : DCIM_LCAttribute {
+
+      [Required, Description (
+          "An array of strings containing possible value "
+          "definitions for the Attribute. The first element SHOULD "
+          "not be NULL and there SHOULD be no NULL or empty string "
+          "elements intermixed with populated array element values. "
+          "A Value of NULL SHALL indicate an element\'s value is "
+          "unknown." ),
+       ArrayType ( "indexed" ),
+       ModelCorrespondence {
+          "DCIM_LCEnumeration.PossibleValuesDescription" }]
+   string PossibleValues[];
+};

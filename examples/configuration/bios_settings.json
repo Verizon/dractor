@@ -1,0 +1,19 @@
+{
+    "Example Configuration": {
+        "Description": "Automatically from PowerEdge R630 (3MVLS52)",
+        "Selectors": {
+            "Priority": 20,
+            "SystemIDs": [
+                "1537"
+            ]
+        },
+        "Settings": {
+            "BootMode": "Uefi",
+            "UefiVariableAccess": "Standard",
+            "UncoreFrequency": "MaxUFS",
+            "Usb3Setting": "Disabled",
+            "UsbPorts": "AllOn",
+            "WriteCache": "Enabled"
+        }
+    }
+}

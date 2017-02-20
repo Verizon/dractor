@@ -1,0 +1,1157 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_RAIDService
+// ==================================================================
+  [Description(
+       "DCIM_RAIDService is a derivation of CIM_BIOSService "
+       "with extrinsic method extensions to support "
+       "RAID functionality")]
+class DCIM_RAIDService : CIM_BIOSService {
+      [Description (
+          "This method is called to apply the pending values created "
+          "by RAID methods" ),
+       ValueMap { "0", "1", "2", "4096"},
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+   uint32 CreateTargetedConfigJob(
+        [Required,IN, Description(
+           "This Parameter is the FQDD of the DCIM_ControllerView")]
+      string Target,
+        [IN, Description(
+           "Input Parameter represents the type of Reboot "
+           "1 - PowerCycle "
+           "2 - Graceful Reboot without forced shutdown "
+           "3 - Graceful Reboot with forced shutdown. ")]
+      uint16 RebootJobType,
+       [IN, Description(
+           "Start Time of job in datetime format:yyyymmddhhmmss. "
+           "The string \"TIME_NOW\" means immediate.")]
+      string ScheduledStartTime,
+        [IN, Description(
+           "Scheduled end time for job execution in datetime "
+           "format:yyyymmddhhmmss. If StartTimeInterval is specified, "
+           "UntilTime has to be specified and vice versa. ")]
+      string UntilTime,
+        [IN, Description(
+           "Input Parameter represents if it is Realtime or Staged "
+           "0 - Staged"
+           "1 - RealTime")]
+      uint16 RealTime,
+        [OUT, Description (
+             "A reference to the ConcreteJob is returned" )]
+      CIM_ConcreteJob REF Job,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is called to cancel the pending values created "
+          "by the SetAttribute and SetAttributes methods." ),
+       ValueMap { "0", "1", "2", "4096"},
+       Values   { "Success", "Not Supported", "Failed", "Job Created"}]
+  uint32 DeletePendingConfiguration (
+        [Required,IN, Description(
+           "This Parameter is the FQDD of the DCIM_ControllerView.")]
+      string Target,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is called to reset the controller configuration." ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 ResetConfig(
+        [IN, Description(
+           "This Parameter is the FQDD of the DCIM_ControllerView.")]
+      string Target,
+       [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" )]
+     string RebootRequired,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+       [Description (
+            "This method is called to create a new Virtual Disk." ),
+        ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+        Values { "Completed with No Error", "Not Supported", "Error",
+         "DMTF Reserved", "Vendor Specified" }]
+     uint32 CreateVirtualDisk(
+       [IN, Description(
+            "This Parameter is the FQDD of the DCIM_ControllerView.")]
+      string Target,
+       [IN, Description(
+            "This Parameter is the list of Physical Disk FQDDs "
+            "that will be used to create a virtual Disk ")]
+     string PDArray[],
+       [IN, Description(
+            "This Parameter is the list of Property Names "
+            "that will be used to create a virtual Disk.  The parameter list "
+            "one of the following values"
+            "Size            uint64 "
+            "StartingLBA     uint64 "
+            "RAIDLevel       uint32 "
+            "SpanDepth       uint32 "
+            "SpanLength      uint32 "
+            "StripeSize      uint32 "
+            "ReadPolicy      uint32 "
+            "WritePolicy     uint32 "
+            "DiskCachePolicy uint32 "
+	    "T10PIStatus     uint32 "
+            "Cachecade       uint32 "
+            "VirtualDiskName string of 16 characters "
+            "Initialize      uint32")]
+     string VDPropNameArray[],
+       [IN, Description(
+           "This Parameter is the list of Property Values "
+           "that will be used to create a virtual Disk. The property "
+           "values are for the property names in the corresponding location "
+           "The Values for the properties can be as follows. "
+           "Size             The Value is in MB. optional "
+           "StartingLBA      The Value is in Blocks"
+           "RAIDLevel        Refer Values in DCIM_VirtualDiskView MOF. required "
+           "SpanDepth        optional "
+           "SpanLength       Number of Physicals Disks  SpanDepth. If the "
+           "                 SpanDepth is not set then the SpanLength is Number "
+           "                 of Physicals Disks .required "
+           "StripeSize       Refer Values in DCIM_VirtualDiskView MOF. optional"
+           "ReadPolicy       Refer Values in DCIM_VirtualDiskView MOF. optional "
+           "WritePolicy      Refer Values in DCIM_VirtualDiskView MOF. optional "
+           "DiskCachePolicy  Refer Values in DCIM_VirtualDiskView MOF. optional "
+	   	   "T10PIStatus      Refer Values in DCIM_VirtualDiskView MOF. optional "
+           "Cachecade        Refer Values in DCIM_VirtualDiskView MOF. optional "
+           "VirtualDiskName  optional "
+           "Initialize       FAST  set to 0 optional")]
+    string VDPropValueArray[],
+      [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+    string MessageID,
+      [OUT, Description (
+              "RebootRequired specifies if you need to reboot see "
+              "the changes" )]
+    string RebootRequired,
+      [OUT, Description (
+              "Error Message in english corresponding to the "
+              "MessageID" )]
+    string Message,
+      [OUT, Description (
+             "A reference to the ConcreteJob is returned" )]
+    DCIM_VirtualDiskView REF NewVirtualDisk,
+      [OUT, Description (
+              "Any dynamic string substitutions for the Message" )]
+    string MessageArguments[]);
+
+       [Description (
+            "This method is called to initialize a Virtual Disk." ),
+        ValueMap { "0", "2" },
+        Values { "Completed with No Error", "Error" }]
+    uint32 InitializeVirtualDisk(
+       [Required, IN, Description(
+            "This Parameter is the FQDD of the Virtual Disk.")]
+    string VirtualDisk,
+       [Required, IN, Description(
+            "This Parameter is the type of the initialization."
+            "0 - fast" )]
+    uint16 InitType,
+      [OUT, Description (
+              "RebootRequired specifies if you need to reboot see "
+              "the changes" )]
+    string RebootRequired,
+     [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+    string MessageID,
+      [OUT, Description (
+              "Error Message in english corresponding to the "
+              "MessageID" )]
+    string Message,
+      [OUT, Description (
+              "Any dynamic string substitutions for the Message" )]
+    string MessageArguments[]);
+
+     [Description (
+          "This method is used to prepare any foreign physical disks"
+          "for inclusion in the local configuration" ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 ClearForeignConfig(
+        [Required, IN, Description(
+           "This Parameter is the FQDD of the DCIM_ControllerView.")]
+      string Target,
+        [OUT, Description (
+             "RebootRequired specifies if you need to reboot see "
+             "the changes" )]
+      string RebootRequired,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is used to determine possible choices"
+          "of drives to create virtual disks" ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+    uint32 GetAvailableDisks(
+        [Required, IN, Description(
+           "This Parameter is the FQDD of the target device (Controller).")]
+      string Target,
+         [Required, IN, Description(
+           "Corresponds to MediaType in PDView"
+           "0-Include all types, 1-Include HDD Only, "
+           "2 - Include SSD only")]
+      uint32 DiskType,
+        [Required, IN, Description(
+           "0-Include all protocols, 1-Include SATA, 2 - Include SAS")]
+      uint32 Diskprotocol,
+        [IN, Description (
+             "0- Include FDE capable and non encryption capable disks"
+             "1- Include FDE disks only"
+             "2- Include only non FDE disks")]
+      uint32 DiskEncrypt,
+	[IN, Description (
+             "0- Include all block size disks"
+             "512- Include 512 bytes block size disks only"
+             "4096- Include 4096 bytes block size disks")]
+      uint32 BlockSizeInBytes,
+	[IN, Description (
+             "0- Include T10PI capable and non T10PI capable disks"
+             "1- Include T10PI disks only"
+             "2- Include only non T10PI disks")]
+      uint32 T10PIStatus,
+        [IN, Description(
+           "Corresponds to RAID Types in VD View - 0/1/5/10/50/6/60")]
+      uint32 RaidLevel,
+        [OUT, Description (
+             "Array of FQDD(s) identifies physical disk(s)")]
+      string PDArray[],
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is used to determine possible choices"
+          "of RAID levels to create virtual disks"
+          "If the list of physical disks is not provided this"
+          "method will operate on all connected disks"),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+       uint32 GetRAIDLevels(
+        [Required, IN, Description(
+           "This Parameter is the FQDD of the target device (Controller).")]
+       string Target,
+        [Required, IN, Description(
+           "Corresponds to MediaType in PDView"
+           "0-Include all types, 1-Include HDD Only, "
+           "2 - Include SSD only")]
+       uint32 DiskType,
+        [Required, IN, Description(
+           "0-Include all protocols, 1-Include SATA, 2 - Include SAS")]
+       uint32 Diskprotocol,
+        [IN, Description (
+             "0- Include FDE capable and non encryption capable disks"
+             "1- Include FDE disks only"
+             "2- Include only non FDE disks")]
+       uint32 DiskEncrypt,
+	[IN, Description (
+             "0- Include T10PI capable and non T10PI capable disks"
+             "1- Include T10PI disks only"
+             "2- Include only non T10PI disks")]
+       uint32 T10PIStatus,
+	[IN, Description (
+             "0- Include all block size disks"
+             "512- Include 512 bytes block size disks only"
+             "4096- Include 4096 bytes block size disks")]
+       uint32 BlockSizeInBytes,
+        [IN, Description (
+             "Array of FQDD(s) identifies physical disk(s)")]
+       string PDArray[],
+        [OUT, Description (
+             "Indexed array of VirtualDisk RAID level enum values")]
+      string VDRAIDEnumArray[],
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is used to determine possible choices "
+          "of drives to be a dedicated hotspare for the "
+          "identified virtual disk"),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+       uint32 GetDHSDisks(
+        [Required, IN, Description(
+           "This Parameter is the FQDD of the target device (virtual disk).")]
+      string Target,
+        [OUT, Description (
+             "Array of FQDD(s) identifies physical disk(s)")]
+      string PDArray[],
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is used to determine possible sizes of. "
+          "virtual disks as well as default settings, given a "
+          "given a RAID level and a set of disks. The VDPropArray "
+          "is filled with size and other values on successful execution" ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values   { "Completed with No Error", "Not Supported", "Error",
+                  "DMTF Reserved", "Vendor Specified" }]
+     uint32 CheckVDValues(
+        [Required, IN, Description(
+           "This Parameter is the FQDD of the DCIM_ControllerView.")]
+      string Target,
+        [Required, IN, Description (
+             "Array of FQDD(s) identifies physical disk(s)")]
+      string PDArray[],
+        [Required, IN, Description(
+           "This Parameter is the list of Property Names "
+           "with values in the VDPropValueArray parameter "
+                 "one of the following values"
+                 " Size            uint64 "
+                 " RAIDLevel       uint32 "
+                 " SpanDepth       uint32 "
+                 " SpanLength      uint32 "
+                 " StartingLBA     uint64 "
+		 " T10PIStatus     uint32 "
+                 )]
+      string VDPropNameArrayIn[],
+        [Required, IN, Description(
+           "This Parameter is the list of Property Values "
+           "that map to the vdpropnamearray parameter "
+           "The Values for the properties can be as follows. "
+           "Size        The Value is in MB. optional "
+           "RAIDLevel   Refer Values in DCIM_VirtualDiskView MOF.required "
+           "SpanDepth   The value is optional "
+           "SpanLength  The Value is optional "
+           "StartingLBA The value is optional "
+           "T10PIStatus The value is optional "
+                 )]
+      string VDPropValueArrayIn[],
+        [OUT, Description (
+             "Indexed array of Virtual Disk property names with relative "
+             "values contained in VDPropValueArray parameter" )]
+      string VDPropNameArray[],
+        [OUT, Description (
+             "Indexed array of Virtual Disk property values relative "
+             "to VDPropValueName parameter." )]
+      string VDPropValueArray[],
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+   [Description (
+          "This method is used to assign a physical disk"
+          "as a dedicated hot spare for a virtual disk or"
+          "as a global hot spare" ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 AssignSpare(
+        [Required, IN, Description(
+           "This Parameter is the FQDD of the target device (physical disk).")]
+      string Target,
+        [IN, Description (
+             "Array of ElementName(s) where each identifies a different VD "
+             "Currently only one Vd can be passed ")]
+      string VirtualDiskArray[],
+        [OUT, Description (
+             "RebootRequired specifies if you need to reboot to set "
+             "the values" )]
+      string RebootRequired,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is used to unassign a physical disk"
+          "as a dedicated hot spare for a virtual disk or"
+          "as a global hot spare" ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 UnassignSpare(
+        [Required, IN, Description(
+           "This Parameter is the FQDD of the target device (physical disk).")]
+      string Target,
+        [OUT, Description (
+             "RebootRequired specifies if you need to reboot to set "
+             "the values" )]
+      string RebootRequired,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is used to delete a single virtual disk"
+          "from the targeted controller. The successful execution of this"
+          "method results in the marking of this virtual disk for deletion."
+          "The ObjectStatus property in the VirtualDiskView will have the"
+          "property PendingDelete.The VD is not deleted until a configjob is"
+          "scheduled and the system rebooted"),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 DeleteVirtualDisk(
+        [Required, IN, Description (
+             "FQDD of target device(virtual disk)")]
+      string Target,
+        [OUT, Description (
+             "RebootRequired specifies if you need to reboot to set "
+             "the values" )]
+      string RebootRequired,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method encrypts the virtual disk"),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 LockVirtualDisk(
+        [Required, IN, Description (
+             "FQDD of target device (Virtual Disk)")]
+      string Target,
+        [OUT, Description (
+             "RebootRequired specifies if you need to reboot to set "
+             "the values" )]
+      string RebootRequired,
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method sets the key on controllers that support "
+          "encryption of drives"),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 SetControllerKey(
+        [Required, IN, Description (
+             "FQDD of target device (controller)")]
+      string Target,
+
+        [IN, Description ("The Key can be maximum 32 characters long, and "
+                  " should have one character from each of the following set. "
+          " 1  Upper Case "
+          " 2   Lower Case "
+          " 3   Number     "
+          " 4   Special Character "
+          " The special characters in the following set need to be passed "
+          " as mentioned below. ")]
+      string Key,
+
+        [Required, IN, Description ("Key identifier - Describes Key. "
+                  "The Keyid can be maximum 32 characters long and "
+                  "should not have spaces in it.")]
+      string Keyid,
+
+        [OUT, Description (
+             "RebootRequired specifies if you need to reboot to set "
+             "the values" )]
+      string RebootRequired,
+
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "The Remove ControllerKey method erases the encryption key on "
+          "controller. All encrypted drives are also erased on this operation" ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 RemoveControllerKey(
+        [IN, Description(
+           "This Parameter is the FQDD of the DCIM_ControllerView.")]
+      string Target,
+
+       [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" )]
+     string RebootRequired,
+
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is called to modify instance of "
+          "RAIDAttribute." ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 SetAttribute(
+         [Required, IN, Description (
+             "This parameter is the FQDD of the RAIDAttribute instances." )]
+      string Target,
+         [Required, IN, Description (
+             "A reference to a RAIDAttribute specified by "
+             "AttributeName " )]
+      string AttributeName,
+         [Required, IN, Description (
+             "A new value to assign to the specified "
+             "RAIDAttribute. If this value is valid, it will be "
+             "applied to the PendingValue property or the Currentvalue "
+             "property of the specified RAIDAttribute." )]
+      string AttributeValue[],
+         [OUT, Description (
+             "Invoking the SetAttribute may result in a set "
+             "to CurrentValue property or the PendingValue "
+             "property. SetResult returns \"Set CurrentValue property\" if "
+             "CurrentValue is set or \"Set PendingValue property\" if "
+             "PendingValue is set." )]
+      string SetResult,
+         [OUT, Description (
+             "Invoking the SetAttribute may require "
+             "a reboot for the set to be effective. "
+             "Value \"Yes\" means a reboot is required. "
+             "Value \"No\" means a reboot is not required")]
+      string RebootRequired,
+         [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+         [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+         [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method is called to modify instances of "
+          "RAIDAttribute." ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 SetAttributes(
+        [Required, IN, Description (
+             "This parameter is the FQDD of the RAIDAttribute instances." )]
+      string Target,
+         [Required, IN, Description (
+             "A reference to a RAIDAttribute specified by "
+             "AttributeName " )]
+      string AttributeName[],
+         [Required, IN, Description (
+             "A new value to assign to the specified "
+             "RAIDAttribute. If this value is valid, it will be "
+             "applied to the PendingValue property or the Currentvalue "
+             "property of the specified RAIDAttribute." )]
+      string AttributeValue[],
+         [OUT, Description (
+             "Invoking the SetAttribute may result in a set "
+             "to CurrentValue property or the PendingValue "
+             "property. SetResult returns \"Set CurrentValue property\" if "
+             "CurrentValue is set or \"Set PendingValue property\" if "
+             "PendingValue is set." )]
+      string SetResult[],
+         [OUT, Description (
+             "Invoking the SetAttribute may require "
+             "a reboot for the set to be effective. "
+             "Value \"Yes\" means a reboot is required. "
+             "Value \"No\" means a reboot is not required")]
+      string RebootRequired[],
+         [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID[],
+         [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+         [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+      [Description (
+          "This method sets the key on controllers that support encryption of drives"),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 EnableControllerEncryption(
+        [Required, IN, Description (
+             "FQDD of target device (controller)")]
+      string Target,
+
+        [IN, Description ("The Key can be maximum 32 characters long, and "
+                  " should have one character from each of the following set. "
+          " 1  Upper Case "
+          " 2   Lower Case "
+          " 3   Number     "
+          " 4   Special Character. "
+          " The special characters in the following set need to be passed "
+          " as mentioned below. ")]
+      string Key,
+
+        [IN, Description ("Key identifier - Describes Key. "
+                  "The Keyid can be maximum 32 characters long and "
+                  "should not have spaces in it.")]
+      string Keyid,
+
+        [IN, Description ("Mode can be either LKM or DKM"),
+          ValueMap {"1", "2"},
+          Values {"LKM", "DKM"}]
+      uint16 Mode,
+
+        [OUT, Description (
+             "RebootRequired specifies if you need to reboot to set "
+             "the values" )]
+      string RebootRequired,
+
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+
+      [Description (
+          "This method sets the key on controllers that support encryption of drives"),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 ReKey(
+        [Required, IN, Description (
+             "FQDD of target device (controller)")]
+      string Target,
+
+        [IN, Description ("Old Controller Key")]
+      string OldKey,
+
+        [IN, Description ("The Key can be maximum 32 characters long, and "
+                  " should have one character from each of the following set. "
+          " 1  Upper Case "
+          " 2   Lower Case "
+          " 3   Number     "
+          " 4   Special Character "
+          " The special characters in the following set need to be passed "
+          " as mentioned below. ")]
+      string NewKey,
+
+        [IN, Description ("Key identifier - Describes Key. "
+                  "The Keyid can be maximum 32 characters long and "
+                  "should not have spaces in it.")]
+      string Keyid,
+
+        [IN, Description ("Mode can be either LKM or DKM"),
+          ValueMap {"1", "2"},
+          Values {"LKM", "DKM"}]
+      uint16 Mode,
+
+        [OUT, Description (
+             "RebootRequired specifies if you need to reboot to set "
+             "the values" )]
+      string RebootRequired,
+
+        [OUT, Description (
+             "Error MessageID is returned if the method fails "
+             "to execute." )]
+      string MessageID,
+
+        [OUT, Description (
+             "Error Message in english corresponding to the "
+             "MessageID" )]
+      string Message,
+
+        [OUT, Description (
+             "Any dynamic string substitutions for the Message" )]
+      string MessageArguments[]);
+
+
+
+   [Description (
+      " This method is called to convert PhysicalDisks in Non-RAID "
+      " state to a state usable for RAID " ),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 ConvertToRAID(
+        [IN, Description(
+           "This parameter takes a list of Physical Disks FQDDs")]
+     string PDArray[],
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+	    ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+   [Description (
+      " This method is called to convert PhysicalDisks in a RAID state "
+      " of Ready to Non-RAID state"),
+       ValueMap { "0", "1", "2", "3..32767", "32768..65535" },
+       Values { "Completed with No Error", "Not Supported", "Error",
+          "DMTF Reserved", "Vendor Specified" }]
+   uint32 ConvertToNonRAID(
+        [IN, Description(
+           "This parameter takes a list of Physical Disks FQDDs")]
+     string PDArray[],
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+	    ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+
+ [Description (
+      " This method is called to This feature allows users to import/recover"
+      " a foreign configuration"),
+       ValueMap { "0", "1", "2"},
+       Values { "Success", "Not Supported", "Failed"
+           }]
+   uint32 ImportForeignConfig(
+	[ Required,IN, Description(
+           "This Parameter is the FQDD of the DCIM_ControllerView")]
+      string Target,
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+            ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+[Description (
+      " This method is called to allow users to stop blinking on the Target"
+      " device .Target Device can be physical disk or SSD or Virtual disk"
+      " depends on FQDD"),
+       ValueMap { "0", "1", "2"},
+       Values { "Success", "Not Supported", "Failed"
+           }]
+   uint32 UnBlinkTarget(
+        [ Required,IN, Description(
+           "This Parameter is the FQDD of the Physical Disk, SSD and Virtual Disk")]
+      string Target,
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+            ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+[Description (
+      " This method is called to allows users to check/verify the accuracy of the redundancy or parity"
+      " information for VDs which are redundant"
+      ),
+       ValueMap { "0", "1", "2"},
+       Values { "Success", "Not Supported", "Failed"
+           }]
+   uint32 CheckConsistency(
+        [ Required,IN, Description(
+           "This Parameter is the FQDD of the Target device")]
+      string Target,
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+            ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+[Description (
+      " This method is called to allows user to Cancel Check Consistency operation that is in progress"
+      ),
+       ValueMap { "0", "1", "2"},
+       Values { "Success", "Not Supported", "Failed"
+           }]
+   uint32 CancelCheckConsistency(
+        [ Required,IN, Description(
+           "This Parameter is the FQDD of the Target device")]
+      string Target,
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+            ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+[Description (
+      " This method is called to allow users to find the disks associated"
+      " with a Physical disk within an enclosure by blinking one of"
+      " the LEDs on each disk"),
+       ValueMap { "0", "1", "2"},
+       Values { "Success", "Not Supported", "Failed"
+           }]
+   uint32 BlinkTarget(
+        [ Required,IN, Description(
+           "This Parameter is the FQDD of the Physical Disk,SSD or Virtual Disk")]
+      string Target,
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+            ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+[Description (
+      " This method is called to allow users to safely remove a SSD "
+      " from the system"),
+       ValueMap { "0", "1", "2"},
+       Values { "Success", "Not Supported", "Failed"
+           }]
+   uint32 PrepareToRemove(
+        [ Required,IN, Description(
+           "This Parameter is the FQDD of the SSD")]
+      string Target,
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+            ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+[Description (
+      " This method is called to allow users to do cryptographic erase of data "
+      " on the PCIeSSD"),
+       ValueMap { "0", "1", "2"},
+       Values { "Success", "Not Supported", "Failed"
+           }]
+   uint32 SecureErase(
+        [ Required,IN, Description(
+           "This Parameter is the FQDD of the SSD")]
+      string Target,
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+            ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+ [Description (
+      " This method is called to Start the Patrol Read Operation Manually"
+    	),
+       ValueMap { "0", "1", "2"},
+       Values { "Success", "Not Supported", "Failed"
+           }]
+   uint32 StartPatrolRead(
+	[ Required,IN, Description(
+           "This Parameter is the FQDD of the Raid Controller Device")]
+      string Target,
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+            ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+
+[Description (
+      " This method is called to Stop the Patrol Read Operation Manually"
+    	),
+       ValueMap { "0", "1", "2"},
+       Values { "Success", "Not Supported", "Failed"
+           }]
+   uint32 StopPatrolRead(
+	[ Required,IN, Description(
+           "This Parameter is the FQDD of the Raid Controller Device")]
+      string Target,
+
+        [OUT, Description (
+           "RebootRequired specifies if you need to reboot see "
+           "the changes" ),
+            ValueMap { "0", "1" },
+            Values { "No", "Yes"}]
+     uint8 RebootRequired,
+
+        [OUT, Description (
+             "List of error MessageID's is returned if the method fails "
+             "to execute." )]
+     string MessageID[],
+
+        [OUT, Description (
+             "List of error Message in english corresponding to the "
+             "MessageID" )]
+      string Message[],
+
+        [OUT, Description (
+             "List of dynamic string substitutions for the correseponding "
+             "Message" )]
+      string MessageArguments[]);
+
+};

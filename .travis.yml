@@ -1,0 +1,5 @@
+language: python
+install:
+  - sudo .travis/install.sh
+script:
+  - "make all"

@@ -1,0 +1,10 @@
+
+[ Description ("The power management capabilities of the element are "
+   "decoupled from a PowerManagementService, "
+   "because a single service could apply to multiple elements, each "
+   "with specific capabilities.")
+]
+
+class DCIM_CSPowerManagementCapabilities : CIM_PowerManagementCapabilities
+{
+};

@@ -1,0 +1,4 @@
+lxml==3.6.4
+requests==2.11.1
+click==6.6
+jsonschema==2.5.1

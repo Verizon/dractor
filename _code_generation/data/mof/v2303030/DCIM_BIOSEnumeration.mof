@@ -1,0 +1,60 @@
+// Copyright (c) 2010 Dell Inc.  All rights reserved.
+// ==================================================================
+// DCIM_BIOSEnumeration
+// ==================================================================
+  [Description("DCIM_BIOSEnumeration is a derivation of "
+       "CIM_BIOSEnumeration.")]
+class DCIM_BIOSEnumeration : CIM_BIOSEnumeration
+{
+      [Description (
+          "A string containing the Fully Qualified Device Description "
+          "A user-friendly name for the object. This property allows each "
+          "instance to define a user-friendly name in addition to its key "
+          "properties, identity data, and description information.")]
+   string  FQDD;
+   [Description (
+          "A string containing the display name for the grouping of the "
+          "attributes that the attribute belongs to.\n "
+          "This is a user-friendly name for the group that can be readily "
+          "displayed on user interfaces. ")]
+   string GroupDisplayName;
+      [Description (
+          "A string containing the ID for the grouping of the attributes "
+          "that the attribute belongs to.\n ")]
+   string GroupID;
+      [Description (
+          "A string containing the attribute display name.\n "
+          "This is a user-friendly name for the attribute that can be "
+          "readily displayed on user interfaces. ")]
+   string AttributeDisplayName;
+      [Description (
+          "Index that denotes the order in which a user "
+          "interface should display the attribute in the group that the "
+          "attribute belongs to. ")]
+   uint16 DisplayOrder;
+      [Description (
+          "A string containing the dependency information for the "
+          "attribute.")]
+   string Dependency;
+   [Required, Description (
+          "An array of strings containing possible value "
+          "definitions for the Attribute. The first element SHOULD "
+          "not be NULL and there SHOULD be no NULL or empty string "
+          "elements intermixed with populated array element values. "
+          "A Value of NULL SHALL indicate an element\'s value is "
+          "unknown." ),
+       ArrayType ( "indexed" ),
+       ModelCorrespondence {
+          "CIM_BIOSEnumeration.PossibleValuesDescription" }]
+   string PossibleValues[];
+   [Description ( 
+          "An array of free-form strings providing explanations and "
+          "details behind the entries in the "
+          "CIM_BIOSEnumeration.PossibleValues array. Note that each "
+          "entry of this array is related to the entry in "
+          "PossibleValues array that is located at the same index." ), 
+       ArrayType ( "indexed" ), 
+       ModelCorrespondence { "CIM_BIOSEnumeration.PossibleValues" }]
+   string PossibleValuesDescription[];
+};
+
